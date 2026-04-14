@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YT Music Clone</title>
+    <title>YT Music Clone - Full Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
@@ -33,7 +33,7 @@
         .logo-area { display: flex; align-items: center; gap: 5px; }
         .logo-area .material-symbols-outlined { color: var(--yt-red); font-size: 28px; }
         .logo-area span { font-size: 22px; font-weight: 700; letter-spacing: -1px; }
-        .header-icons { display: flex; align-items: center; gap: 20px; color: var(--text-primary); }
+        .header-icons { display: flex; align-items: center; gap: 20px; color: var(--text-primary); cursor: pointer;}
         .header-icons img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
         .search-container { display: none; flex: 1; margin-left: 15px; margin-right: 15px; }
@@ -41,22 +41,24 @@
 
         .category-pills { display: flex; gap: 10px; padding: 0 20px 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .category-pills::-webkit-scrollbar { display: none; }
-        .pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;}
+        .pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;}
+        .pill.active { background: white; color: black; font-weight: bold; }
         
         .section-title { padding: 20px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; }
         .section-info { display: flex; flex-direction: column; }
         .section-subtitle { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .section-title h2 { font-size: 24px; font-weight: 700; margin-top: 2px;}
         
-        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; }
-        .card { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #222; cursor: pointer; }
+        /* PERBAIKAN GRID RESPONSIF UNTUK HP DAN PC */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; padding: 0 20px; }
+        .card { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #222; cursor: pointer; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; align-items: flex-end; padding: 8px; }
-        .card-title { font-size: 12px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
+        .card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; align-items: flex-end; padding: 10px; }
+        .card-title { font-size: 13px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
 
         /* ================= BOTTOM NAV ================= */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--bg-surface); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: 5px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; gap: 4px; cursor: pointer; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; gap: 4px; cursor: pointer; transition: 0.2s;}
         .nav-item.active { color: var(--text-primary); }
         .nav-item span { font-size: 24px; }
 
@@ -77,7 +79,7 @@
 
         .fp-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .fp-toggle { background: #222; border-radius: 20px; display: flex; font-size: 13px; font-weight: 500; padding: 2px; }
-        .fp-toggle-btn { padding: 6px 16px; border-radius: 16px; color: var(--text-secondary); }
+        .fp-toggle-btn { padding: 6px 16px; border-radius: 16px; color: var(--text-secondary); cursor: pointer;}
         .fp-toggle-btn.active { background: #444; color: white; }
 
         .fp-video-container { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 20px; position: relative; flex-shrink: 0; }
@@ -89,7 +91,8 @@
 
         .fp-actions { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; margin-bottom: 30px; flex-shrink: 0; }
         .fp-actions::-webkit-scrollbar { display: none; }
-        .action-pill { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; white-space: nowrap; }
+        .action-pill { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: 0.2s;}
+        .action-pill.active-btn { background: white; color: black; }
 
         .fp-progress-area { padding: 0 20px; flex-shrink: 0; }
         .progress-bar-container { width: 100%; height: 4px; background: #444; border-radius: 2px; position: relative; margin-bottom: 10px; cursor: pointer; }
@@ -111,7 +114,7 @@
         .tab.active { color: white; }
         .tab.active::after { content: ''; position: absolute; bottom: 0; left: 15%; right: 15%; height: 2px; background: white; border-radius: 2px 2px 0 0; }
 
-        .tab-content-container { flex: 1; overflow-y: auto; }
+        .tab-content-container { flex: 1; overflow-y: auto; padding-bottom: 20px;}
         .tab-pane { display: none; flex-direction: column; padding-bottom: 30px; }
         .tab-pane.active { display: flex; }
 
@@ -126,8 +129,9 @@
         .un-pill { background: rgba(255,255,255,0.1); border: 1px solid transparent; padding: 6px 16px; border-radius: 16px; font-size: 13px; color: white; white-space: nowrap; cursor: pointer; }
         .un-pill.active { background: white; color: black; font-weight: 500; }
 
-        .song-list-item { display: flex; align-items: center; padding: 10px 20px; gap: 15px; cursor: pointer; }
-        .song-list-item img { width: 56px; height: 32px; border-radius: 4px; object-fit: cover; }
+        .song-list-item { display: flex; align-items: center; padding: 10px 20px; gap: 15px; cursor: pointer; transition: 0.2s;}
+        .song-list-item:hover { background: rgba(255,255,255,0.05); }
+        .song-list-item img { width: 56px; height: 40px; border-radius: 4px; object-fit: cover; }
         .song-list-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .song-list-title { font-size: 14px; font-weight: 500; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .song-list-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
@@ -136,7 +140,7 @@
         .mxm-credit { display: flex; align-items: center; gap: 8px; padding: 0 20px 20px 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .mxm-credit img { width: 16px; height: 16px; opacity: 0.7; }
 
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--yt-red); padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; z-index: 9999; display: none; white-space: nowrap; }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--yt-red); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; z-index: 9999; display: none; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
     </style>
 </head>
 <body>
@@ -151,21 +155,21 @@
             </div>
             
             <div class="search-container" id="search-box">
-                <input type="text" id="searchInput" placeholder="Telusuri...">
+                <input type="text" id="searchInput" placeholder="Telusuri lagu dari playlist...">
             </div>
 
             <div class="header-icons">
-                <span class="material-symbols-outlined">cast</span>
+                <span class="material-symbols-outlined" onclick="uiAction('Menghubungkan ke TV...')">cast</span>
                 <span class="material-symbols-outlined" id="search-icon" onclick="toggleSearch()">search</span>
-                <img src="https://i.pravatar.cc/100?u=putihbiru" alt="Profile">
+                <img src="https://i.pravatar.cc/100?u=putihbiru" alt="Profile" onclick="uiAction('Buka Profil Agung')">
             </div>
         </div>
 
         <div class="category-pills">
-            <div class="pill">Senang</div>
-            <div class="pill">Bersantai</div>
-            <div class="pill">Perjalanan</div>
-            <div class="pill">Mengisi energi</div>
+            <div class="pill" onclick="togglePill(this)">Senang</div>
+            <div class="pill" onclick="togglePill(this)">Bersantai</div>
+            <div class="pill" onclick="togglePill(this)">Perjalanan</div>
+            <div class="pill" onclick="togglePill(this)">Mengisi energi</div>
         </div>
 
         <div class="section-title">
@@ -192,11 +196,11 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active"><span class="material-symbols-outlined icon-filled">home</span>Beranda</div>
-        <div class="nav-item"><span class="material-symbols-outlined">play_circle</span>Sampel</div>
-        <div class="nav-item"><span class="material-symbols-outlined">explore</span>Eksplorasi</div>
-        <div class="nav-item"><span class="material-symbols-outlined">library_music</span>Koleksi</div>
-        <div class="nav-item"><span class="material-symbols-outlined">workspace_premium</span>Upgrade</div>
+        <div class="nav-item active" onclick="navTo(this, 'Beranda')"><span class="material-symbols-outlined icon-filled">home</span>Beranda</div>
+        <div class="nav-item" onclick="navTo(this, 'Sampel')"><span class="material-symbols-outlined">play_circle</span>Sampel</div>
+        <div class="nav-item" onclick="navTo(this, 'Eksplorasi')"><span class="material-symbols-outlined">explore</span>Eksplorasi</div>
+        <div class="nav-item" onclick="navTo(this, 'Koleksi')"><span class="material-symbols-outlined">library_music</span>Koleksi</div>
+        <div class="nav-item" onclick="navTo(this, 'Upgrade')"><span class="material-symbols-outlined">workspace_premium</span>Upgrade</div>
     </div>
 
     <div id="full-player">
@@ -204,10 +208,10 @@
             <div class="fp-header">
                 <span class="material-symbols-outlined" onclick="closePlayer()" style="font-size: 30px; cursor: pointer;">expand_more</span>
                 <div class="fp-toggle">
-                    <div class="fp-toggle-btn active">Lagu</div>
-                    <div class="fp-toggle-btn">Video</div>
+                    <div class="fp-toggle-btn active" onclick="toggleMode(this)">Lagu</div>
+                    <div class="fp-toggle-btn" onclick="toggleMode(this)">Video</div>
                 </div>
-                <span class="material-symbols-outlined">more_vert</span>
+                <span class="material-symbols-outlined" onclick="uiAction('Opsi lainnya')">more_vert</span>
             </div>
 
             <div class="fp-video-container">
@@ -220,10 +224,10 @@
             </div>
 
             <div class="fp-actions">
-                <div class="action-pill"><span class="material-symbols-outlined icon-filled">thumb_up</span> 7,9 rb</div>
-                <div class="action-pill"><span class="material-symbols-outlined">thumb_down</span></div>
-                <div class="action-pill"><span class="material-symbols-outlined">chat</span> 520</div>
-                <div class="action-pill"><span class="material-symbols-outlined">library_add</span> Simpan</div>
+                <div class="action-pill" onclick="btnLike(this)"><span class="material-symbols-outlined icon-filled">thumb_up</span> <span class="val">7,9 rb</span></div>
+                <div class="action-pill" onclick="btnDislike(this)"><span class="material-symbols-outlined">thumb_down</span></div>
+                <div class="action-pill" onclick="uiAction('Komentar dinonaktifkan sementara')"><span class="material-symbols-outlined">chat</span> 520</div>
+                <div class="action-pill" onclick="btnSave(this)"><span class="material-symbols-outlined">library_add</span> <span class="txt">Simpan</span></div>
             </div>
 
             <div class="fp-progress-area">
@@ -261,16 +265,15 @@
                             <span class="un-subtitle">Diputar dari</span>
                             <span class="un-title" id="un-head-title">Radio Musik</span>
                         </div>
-                        <button class="un-save-btn">
+                        <button class="un-save-btn" onclick="uiAction('Antrean disimpan')">
                             <span class="material-symbols-outlined" style="font-size: 20px;">playlist_add</span> Simpan
                         </button>
                     </div>
                     <div class="un-filters">
-                        <div class="un-pill active">All</div>
-                        <div class="un-pill">Populer</div>
-                        <div class="un-pill">Temukan</div>
-                        <div class="un-pill">Musik Populer</div>
-                        <div class="un-pill">Musik R&B</div>
+                        <div class="un-pill active" onclick="toggleUnPill(this)">All</div>
+                        <div class="un-pill" onclick="toggleUnPill(this)">Populer</div>
+                        <div class="un-pill" onclick="toggleUnPill(this)">Temukan</div>
+                        <div class="un-pill" onclick="toggleUnPill(this)">Musik R&B</div>
                     </div>
                     <div id="up-next-list"></div>
                 </div>
@@ -284,57 +287,159 @@
                 </div>
 
                 <div id="tab-terkait" class="tab-pane">
-                    <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">Tidak ada saran terkait.</div>
+                    <div style="padding: 15px 20px; font-weight: bold; font-size: 14px;">Disarankan buat kamu</div>
+                    <div id="terkait-list"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 76 LAGU LENGKAP MILIK AGUNG
         const myPlaylist = [
-            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo", lyrics: "Duhai calon mantu idaman\nSenyummu manis bagaikan rembulan\n...\n(Contoh Lirik - Tambahkan teks aslinya di kode)" },
-            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main!", artist: "antinrml", lyrics: "Kita cuma temen\nTapi kok rasanya beda\nMain-main doang\nTapi hati ga bisa bohong\n...\n(Contoh Lirik)" },
-            { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU", artist: "antinrml" },
-            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla & Yung Caters" },
-            { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza" },
-            { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO & Tenxi" },
-            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN.flv", artist: "Starky Aji" },
-            { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay , Ciloqciliq & Zynakal" },
-            { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi & RYO" },
-            { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi , Jemsii & Naufal Syachreza" },
-            { id: "M0gHZvLTJyI", title: "MALU MALU", artist: "dia & INDAHKUS" },
-            { id: "bGAmJJKEaQE", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo" },
-            { id: "r4puA1XHgx0", title: "cuma satu", artist: "Suisei , Tenxi & Kirohta" },
-            { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla" },
-            { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi, RYO, dia, dan Jemsii" },
-            { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah & Andi Rianto" },
-            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah" },
-            { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah" },
-            { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU BOY", artist: "Maikaldo Sihotang" },
-            { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata" },
-            { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata" },
-            { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata" },
-            { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO" },
-            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO" },
-            { id: "heukr71gj9I", title: "main-main!", artist: "RYO & Josua Natanael" },
-            { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi , suisei & Jemsii" },
-            { id: "En-EHqRk8yg", title: "Garam & Madu (Sakit Dadaku)", artist: "Tenxi" },
-            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi & Jemsii" },
-            { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi & Jemsii" },
-            { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk" },
-            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian & Adrian Khalif" },
-            { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia & Tenxi" },
-            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel" },
-            { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah" }
+            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.52" },
+            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main! ft. Josua Natanael (Official Music Video)", artist: "antinrml 5.07" },
+            { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU (Official Music Video)", artist: "antinrml 3.48" },
+            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla  &  Yung Caters 3.14 centyl" },
+            { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza 2.38 SUPER EKSIS" },
+            { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO  &  Tenxi 2.30 LoudeR (Sped Up)" },
+            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN.flv", artist: "Starky Aji 5.14" },
+            { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay ,  Ciloqciliq  &  Zynakal 3.10 Ngga Dulu" },
+            { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi  &  RYO 2.43 1/10" },
+            { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi ,  Jemsii  &  Naufal Syachreza 3.52" },
+            { id: "M0gHZvLTJyI", title: "MALU MALU", artist: "dia  &  INDAHKUS 3.26 MALU MALU" },
+            { id: "bGAmJJKEaQE", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.10 Calon Mantu Idaman" },
+            { id: "r4puA1XHgx0", title: "cuma satu", artist: "Suisei ,  Tenxi  &  Kirohta 2.40" },
+            { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla 2.36 SO ASU" },
+            { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi, RYO, dia, dan Jemsii 3.26 Puting Beliung" },
+            { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu (Orchestra Version)", artist: "Nadhif Basalamah  &  Andi Rianto 4.38 BSS & KITST (Orchestra Version)" },
+            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah 4.10 Selamat Ulang Tahun" },
+            { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah 3.59 Untuk Dunia, Cinta, dan Kotornya" },
+            { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU BOY MALU MALU DIA ELART REMIX VIRAL TIKTOK TERBARU 2026 !!", artist: "Maikaldo Sihotang 6.16" },
+            { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata 3.21 Bahagia Itu Sederhana" },
+            { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata 3.11 Pura Pura Bahagia" },
+            { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata 3.27 Meriang" },
+            { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO 2.24 Gak Karuan" },
+            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO 2.24 LoudeR" },
+            { id: "heukr71gj9I", title: "main-main!", artist: "RYO  &  Josua Natanael 2.09 main-main!" },
+            { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi ,  suisei  &  Jemsii 3.17 mejikuhibiniu" },
+            { id: "En-EHqRk8yg", title: "Garam & Madu (Sakit Dadaku)", artist: "Tenxi 3.05 Garam & Madu (Sakit Dadaku)" },
+            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi  &  Jemsii 4.07 Puting Beliung" },
+            { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi  &  Jemsii 3.22 Puting Beliung" },
+            { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk ,  Banditoz Yaow 86  &  BoyCord 3.44 Kicau Mania" },
+            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian  &  Adrian Khalif 3.30 Alamak" },
+            { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia  &  Tenxi 2.34 INI DIA" },
+            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel 2.57 Masa Lalu" },
+            { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah 4.39 Sorai" },
+            { id: "Z1FyY4sM7ok", title: "Kasih Aba Aba", artist: "Naykilla ,  Tenxi  &  Jemsii 2.57 Kasih Aba Aba" },
+            { id: "CCw8K2Sskkk", title: "Semua Aku Dirayakan", artist: "Nadin Amizah 5.11 Semua Aku Dirayakan" },
+            { id: "6bwJ6Wjt-VQ", title: "Bintang 5", artist: "Tenxi  &  Jemsii 4.19" },
+            { id: "K-OYnG7j9Ys", title: "JAMET", artist: "dia 2.22 JAMET" },
+            { id: "BM5OiWNtWNQ", title: "Kasih Tau Mama (Malam Minggu)", artist: "Rombongan Bodonk Koplo 3.27 Kasih Tau Mama (Malam Minggu)" },
+            { id: "bHwhI85mQ9M", title: "attached", artist: "Tenxi ,  Anangga  &  Suisei 2.52" },
+            { id: "qnbwUiSudIk", title: "Berubah", artist: "Tenxi  &  Jemsii 3.21" },
+            { id: "st3Oo1Zf7x0", title: "Goyang Dumang", artist: "Cita Citata 3.47 Goyang Dumang" },
+            { id: "lQ3ktPaXwWY", title: "Orang Baru Lebe Gacor", artist: "Ecko Show ,  Juan Reza  &  Chesylino 3.37 Orang Baru Lebe Gacor" },
+            { id: "O9aBf7J00Zc", title: "Jangan Buru-Buru (Berdua)", artist: "RYO 2.39 LoudeR" },
+            { id: "TjJuxZQlPH0", title: "Aku Mah Apa Atuh", artist: "Cita Citata 3.36 Aku Mah Apa Atuh" },
+            { id: "Xh93FL06JwQ", title: "Bertaut", artist: "Nadin Amizah 5.16 Selamat Ulang Tahun" },
+            { id: "Qb8vgvtEuEs", title: "Lihat Kebunku (Taman Bunga)", artist: "Aku Jeje 3.10 Lihat Kebunku (Taman Bunga)" },
+            { id: "R7mX714_QZs", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah 4.40 Nadhif (laman berikutnya)" },
+            { id: "zhawF9_lpM0", title: "Runtuh (feat. Fiersa Besari)", artist: "Feby Putri 3.44 Runtuh" },
+            { id: "gB8n3ZIWcUk", title: "EEEE A", artist: "dia 1.59 INI DIA" },
+            { id: "MODbh7nKWmQ", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf 3.51 Sedia Aku Sebelum Hujan" },
+            { id: "xnALK28rQ1w", title: "Bunga Maaf", artist: "The Lantis 4.13 Bunga Maaf" },
+            { id: "60gOh6eCrkw", title: "Terbuang Dalam Waktu", artist: "Barasuara 4.40 Terbuang Dalam Waktu" },
+            { id: "SVzHmRZZNrE", title: "Lantas", artist: "Juicy Luicy 3.55 Lantas" },
+            { id: "QJkJILUQ0mM", title: "Ayam Den Lapeh   LAGU MINANG RIA", artist: "Lagu Sunda dan Minangkabau 3.46" },
+            { id: "1Sbp-0WwYpA", title: "Keong Racun Fersi BaLI", artist: "benvoer 2.08" },
+            { id: "_IxACCqUhK0", title: "DJ CALON MANTU IDAMAN BREAKFUNK YANG LAGI VIRAL TIKTOK", artist: "Sarip Remix 3.07" },
+            { id: "LLZS82p8drk", title: "No Comment", artist: "Tuty Wibowo  &  Bunda Corla 2.52" },
+            { id: "peo7ICI4ABk", title: "Kacamata (Live) (feat. Juicy Luicy)", artist: "Afgan 3.16" },
+            { id: "IwzkfMmNMpM", title: "Dreamers (FIFA World Cup 2022 Soundtrack)", artist: "Jung Kook  &  BTS 4.16" },
+            { id: "3HSYwQFosjQ", title: "Selalu Ada di Nadimu", artist: "Prince Poetiray  &  Quinn Salman 2.55" },
+            { id: "YSIS560SMGE", title: "Kasih Putih", artist: "Yovie Widianto  &  Glenn Fredly 3.57 Kembali" },
+            { id: "SVzHmRZZNrE", title: "Lantas", artist: "Juicy Luicy 3.55 Lantas" },
+            { id: "X9EDqDWza3M", title: "Sialan", artist: "Juicy Luicy  &  Adrian Khalif 4.02 Nonfiksi" },
+            { id: "oojgR4tkQCQ", title: "Lampu Kuning", artist: "Juicy Luicy 4.00 Nonfiksi" },
+            { id: "DqJN5Pg3As4", title: "Tampar", artist: "Juicy Luicy 3.23 Nonfiksi" },
+            { id: "y77uJgd0Wdg", title: "Tak Di Tanganku", artist: "Mawar De Jongh  &  Juicy Luicy 3.53" },
+            { id: "4y8l22UYkOk", title: "Bukan Orangnya", artist: "Juicy Luicy 3.11 Nonfiksi" },
+            { id: "Ki4suUlzDWw", title: "Tanpa Tergesa", artist: "Juicy Luicy 3.39 Tanpa Tergesa" },
+            { id: "RH-azQEq3es", title: "Asing", artist: "Juicy Luicy 3.14 Nonfiksi" },
+            { id: "9TuWiwkBGis", title: "Terlalu Tinggi", artist: "Juicy Luicy 4.39 Terlalu Tinggi" },
+            { id: "0wDZIAJQ_yY", title: "Mawar Jingga", artist: "Juicy Luicy 3.32 Mawar Jingga" },
+            { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy 3.14 Nonfiksi" }
         ]; 
 
         let player;
         let currentIndex = 0;
         let playerReady = false;
         
-        // Status Acak (Shuffle) dan Ulang (Repeat)
         let isShuffle = false;
-        let repeatMode = 0; // 0 = tidak ulang, 1 = ulang semua, 2 = ulang satu lagu
+        let repeatMode = 0; 
+
+        // Fungsi Global Notifikasi
+        function uiAction(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            t.style.background = 'var(--text-primary)';
+            t.style.color = 'var(--bg-base)';
+            setTimeout(() => t.style.display = 'none', 2500);
+        }
+
+        // ================= PENAMBAHAN FUNGSI TOMBOL UI =================
+        function togglePill(el) {
+            el.classList.toggle('active');
+            if(el.classList.contains('active')) uiAction('Filter diterapkan');
+        }
+
+        function navTo(el, page) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            if(page !== 'Beranda') uiAction('Membuka menu ' + page + '...');
+        }
+
+        function toggleMode(el) {
+            document.querySelectorAll('.fp-toggle-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            uiAction('Beralih mode');
+        }
+
+        function toggleUnPill(el) {
+            document.querySelectorAll('.un-pill').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function btnLike(el) {
+            el.classList.toggle('active-btn');
+            const icon = el.querySelector('.material-symbols-outlined');
+            if(el.classList.contains('active-btn')) {
+                icon.style.color = '#fff';
+                uiAction('Ditambahkan ke video yang disukai');
+            } else {
+                icon.style.color = 'var(--text-secondary)';
+                uiAction('Dihapus dari video yang disukai');
+            }
+        }
+
+        function btnDislike(el) {
+            el.classList.toggle('active-btn');
+            uiAction('Masukan kamu membantu menyempurnakan rekomendasi');
+        }
+
+        function btnSave(el) {
+            const icon = el.querySelector('.material-symbols-outlined');
+            const txt = el.querySelector('.txt');
+            if(icon.innerText === 'library_add') {
+                icon.innerText = 'library_add_check'; icon.classList.add('icon-filled');
+                txt.innerText = 'Tersimpan'; uiAction('Disimpan ke playlist');
+            } else {
+                icon.innerText = 'library_add'; icon.classList.remove('icon-filled');
+                txt.innerText = 'Simpan'; uiAction('Dihapus dari playlist');
+            }
+        }
 
         // Render Home Grid
         function renderUI(query = '') {
@@ -343,11 +448,10 @@
             
             myPlaylist.forEach((song, i) => {
                 if (query && !song.title.toLowerCase().includes(query.toLowerCase()) && !song.artist.toLowerCase().includes(query.toLowerCase())) return;
-
                 const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
                 grid.innerHTML += `
                     <div class="card" onclick="playSong(${i})">
-                        <img src="${thumb}" alt="Cover">
+                        <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
                         <div class="card-overlay">
                             <div class="card-title">${song.title}</div>
                         </div>
@@ -356,25 +460,23 @@
         }
         renderUI();
 
-        // Render Daftar Lagu di "Berikutnya"
+        // Render Daftar Berikutnya dan TERKAIT
         function renderUpNextList() {
             const listContainer = document.getElementById('up-next-list');
-            listContainer.innerHTML = '';
+            const terkaitContainer = document.getElementById('terkait-list');
+            listContainer.innerHTML = ''; terkaitContainer.innerHTML = '';
             
             myPlaylist.forEach((song, i) => {
                 const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
-                
                 const viewsArr = [585, 250, 3.9, 247, 62, 180, 265, 3.2, 1.1];
                 const v = viewsArr[i % viewsArr.length];
                 const viewText = v % 1 !== 0 ? `${v} jt x ditonton` : `${v} rb x ditonton`;
                 
-                if(i === currentIndex) {
-                   document.getElementById('un-head-title').innerText = `Radio ${song.title}`; 
-                }
-
+                if(i === currentIndex) document.getElementById('un-head-title').innerText = `Radio ${song.title}`; 
+                
                 listContainer.innerHTML += `
                     <div class="song-list-item" onclick="playSong(${i}); closeBottomSheet();">
-                        <img src="${thumb}" alt="Thumb">
+                        <img src="${thumb}" onerror="this.src='https://via.placeholder.com/60'">
                         <div class="song-list-info">
                             <div class="song-list-title" style="${i === currentIndex ? 'color: white; font-weight: 700;' : ''}">${song.title}</div>
                             <div class="song-list-artist">${song.artist} • ${viewText}</div>
@@ -383,31 +485,39 @@
                     </div>
                 `;
             });
+
+            // TAB TERKAIT (Otomatis Ambil 8 Lagu Random)
+            let shuffled = [...myPlaylist].sort(() => 0.5 - Math.random()).slice(0, 8);
+            shuffled.forEach((song) => {
+                const realIndex = myPlaylist.findIndex(s => s.id === song.id);
+                terkaitContainer.innerHTML += `
+                    <div class="song-list-item" onclick="playSong(${realIndex}); closeBottomSheet();">
+                        <img src="https://img.youtube.com/vi/${song.id}/hqdefault.jpg" onerror="this.src='https://via.placeholder.com/60'">
+                        <div class="song-list-info">
+                            <div class="song-list-title">${song.title}</div>
+                            <div class="song-list-artist">${song.artist}</div>
+                        </div>
+                        <span class="material-symbols-outlined" style="color: var(--text-secondary);">more_vert</span>
+                    </div>
+                `;
+            });
         }
 
-        // Fungsi Bottom Sheet (Mentok bawah & meluas)
+        // Bottom Sheet Logic
         function toggleBottomSheet(tabId, event) {
             const sheet = document.getElementById('bottom-sheet');
             const currentActive = document.querySelector('.tab.active');
-            
-            // Jika diklik di tab yang sama dan sedang terbuka, tutup
             if (sheet.classList.contains('expanded') && currentActive === event.currentTarget) {
-                closeBottomSheet();
-                return;
+                closeBottomSheet(); return;
             }
-
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-
             event.currentTarget.classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
-            
             sheet.classList.add('expanded');
         }
 
-        function closeBottomSheet() {
-            document.getElementById('bottom-sheet').classList.remove('expanded');
-        }
+        function closeBottomSheet() { document.getElementById('bottom-sheet').classList.remove('expanded'); }
 
         // YouTube API Setup
         var tag = document.createElement('script');
@@ -419,22 +529,18 @@
             player = new YT.Player('yt-player', {
                 videoId: myPlaylist[0].id,
                 playerVars: { controls: 0, rel: 0, origin: window.location.origin, playsinline: 1, disablekb: 1 },
-                events: { 
-                    'onReady': onPlayerReady,
-                    'onStateChange': onStateChange,
-                    'onError': onPlayerError 
-                }
+                events: { 'onReady': onPlayerReady, 'onStateChange': onStateChange, 'onError': onPlayerError }
             });
         }
 
         function onPlayerReady() {
-            playerReady = true;
-            setInterval(updateProgressBar, 500);
-            renderUpNextList();
+            playerReady = true; setInterval(updateProgressBar, 500); renderUpNextList();
         }
 
         function onPlayerError() {
             const t = document.getElementById('toast');
+            t.innerText = "Video diblokir label musik. Auto-skip berjalan...";
+            t.style.background = "var(--yt-red)"; t.style.color = "white";
             t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
             setTimeout(nextSong, 1500);
         }
@@ -442,17 +548,13 @@
         function playSong(index) {
             currentIndex = index;
             if (playerReady) player.loadVideoById(myPlaylist[index].id);
-            updateMetadata(index);
-            openPlayer();
+            updateMetadata(index); openPlayer();
         }
 
-        // Logika Acak dan Next
         function nextSong() {
             if (isShuffle) {
                 let randomIdx = currentIndex;
-                while (randomIdx === currentIndex && myPlaylist.length > 1) {
-                    randomIdx = Math.floor(Math.random() * myPlaylist.length);
-                }
+                while (randomIdx === currentIndex && myPlaylist.length > 1) { randomIdx = Math.floor(Math.random() * myPlaylist.length); }
                 currentIndex = randomIdx;
             } else {
                 currentIndex = (currentIndex + 1) % myPlaylist.length;
@@ -470,27 +572,19 @@
             player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
         }
 
-        // Toggle Fungsi Acak (Shuffle)
         function toggleShuffle() {
             isShuffle = !isShuffle;
             const btn = document.getElementById('btn-shuffle');
             btn.style.color = isShuffle ? 'white' : 'var(--text-secondary)';
+            if(isShuffle) uiAction('Acak aktif'); else uiAction('Acak nonaktif');
         }
 
-        // Toggle Fungsi Ulang (Repeat)
         function toggleRepeat() {
             repeatMode = (repeatMode + 1) % 3;
             const btn = document.getElementById('btn-repeat');
-            if (repeatMode === 0) {
-                btn.innerText = 'repeat';
-                btn.style.color = 'var(--text-secondary)';
-            } else if (repeatMode === 1) {
-                btn.innerText = 'repeat';
-                btn.style.color = 'white';
-            } else if (repeatMode === 2) {
-                btn.innerText = 'repeat_one';
-                btn.style.color = 'white';
-            }
+            if (repeatMode === 0) { btn.innerText = 'repeat'; btn.style.color = 'var(--text-secondary)'; uiAction('Ulang nonaktif'); }
+            else if (repeatMode === 1) { btn.innerText = 'repeat'; btn.style.color = 'white'; uiAction('Ulang antrean'); }
+            else if (repeatMode === 2) { btn.innerText = 'repeat_one'; btn.style.color = 'white'; uiAction('Ulang lagu saat ini'); }
         }
 
         function onStateChange(e) {
@@ -502,15 +596,8 @@
             } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.UNSTARTED) {
                 fpIcon.innerText = 'play_arrow'; mIcon.innerText = 'play_arrow';
             } else if(e.data === YT.PlayerState.ENDED) {
-                // Logika Repeat / Auto-next
-                if (repeatMode === 2) {
-                    player.seekTo(0);
-                    player.playVideo();
-                } else if (repeatMode === 1 || isShuffle || currentIndex < myPlaylist.length - 1) {
-                    nextSong();
-                } else {
-                    // Berhenti jika sampai akhir dan tanpa repeat
-                }
+                if (repeatMode === 2) { player.seekTo(0); player.playVideo(); }
+                else if (repeatMode === 1 || isShuffle || currentIndex < myPlaylist.length - 1) { nextSong(); }
             }
         }
 
@@ -518,21 +605,13 @@
             const song = myPlaylist[idx];
             const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
             
-            document.getElementById('m-title').innerText = song.title;
-            document.getElementById('m-artist').innerText = song.artist;
-            document.getElementById('m-thumb').src = thumb;
-            document.getElementById('mini-player').classList.remove('hidden');
+            document.getElementById('m-title').innerText = song.title; document.getElementById('m-artist').innerText = song.artist;
+            document.getElementById('m-thumb').src = thumb; document.getElementById('mini-player').classList.remove('hidden');
             
-            document.getElementById('fp-title').innerText = song.title;
-            document.getElementById('fp-artist').innerText = song.artist;
+            document.getElementById('fp-title').innerText = song.title; document.getElementById('fp-artist').innerText = song.artist;
             
             const lyricsContainer = document.getElementById('lyrics-content');
-            if (song.lyrics) {
-                lyricsContainer.innerText = song.lyrics;
-            } else {
-                lyricsContainer.innerHTML = `<span style="color: var(--text-secondary); font-weight: 500; font-size: 16px;">Lirik untuk lagu ini belum ditambahkan secara manual di dalam kode.</span>`;
-            }
-
+            lyricsContainer.innerHTML = song.lyrics ? song.lyrics : `<span style="color: var(--text-secondary); font-weight: 500; font-size: 16px;">Lirik untuk lagu ini belum ditambahkan.</span>`;
             renderUpNextList();
         }
 
@@ -545,9 +624,7 @@
 
         function updateProgressBar() {
             if(!playerReady || !player.getCurrentTime) return;
-            const cur = player.getCurrentTime();
-            const dur = player.getDuration();
-            
+            const cur = player.getCurrentTime(); const dur = player.getDuration();
             if(dur > 0) {
                 const perc = (cur / dur) * 100;
                 document.getElementById('p-fill').style.width = perc + '%';
@@ -564,31 +641,17 @@
         }
 
         function openPlayer() { document.getElementById('full-player').classList.add('active'); }
-        function closePlayer() { 
-            document.getElementById('full-player').classList.remove('active'); 
-            closeBottomSheet();
-        }
+        function closePlayer() { document.getElementById('full-player').classList.remove('active'); closeBottomSheet(); }
 
         let searchActive = false;
         function toggleSearch() {
-            const sb = document.getElementById('search-box');
-            const logo = document.getElementById('main-logo');
+            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
             searchActive = !searchActive;
-            
-            if (searchActive) {
-                logo.style.display = 'none';
-                sb.style.display = 'block';
-                document.getElementById('searchInput').focus();
-            } else {
-                logo.style.display = 'flex';
-                sb.style.display = 'none';
-                document.getElementById('searchInput').value = '';
-                renderUI();
-            }
+            if (searchActive) { logo.style.display = 'none'; sb.style.display = 'block'; document.getElementById('searchInput').focus(); }
+            else { logo.style.display = 'flex'; sb.style.display = 'none'; document.getElementById('searchInput').value = ''; renderUI(); }
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => renderUI(e.target.value));
-
     </script>
 </body>
 </html>
