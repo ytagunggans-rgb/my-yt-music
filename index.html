@@ -23,7 +23,6 @@
             height: 100vh; overflow: hidden; display: flex; flex-direction: column;
         }
 
-        /* Tipe Ikon Material */
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
         .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
@@ -37,16 +36,13 @@
         .header-icons { display: flex; align-items: center; gap: 20px; color: var(--text-primary); }
         .header-icons img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
-        /* Search Input */
         .search-container { display: none; flex: 1; margin-left: 15px; margin-right: 15px; }
         .search-container input { width: 100%; background: #333; border: none; color: white; padding: 8px 15px; border-radius: 20px; outline: none; }
 
-        /* Kategori Atas */
         .category-pills { display: flex; gap: 10px; padding: 0 20px 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .category-pills::-webkit-scrollbar { display: none; }
         .pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;}
         
-        /* Pintasan Cepat */
         .section-title { padding: 20px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; }
         .section-info { display: flex; flex-direction: column; }
         .section-subtitle { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -74,9 +70,11 @@
         .mini-controls { display: flex; align-items: center; gap: 15px; padding-right: 5px; }
 
         /* ================= FULL PLAYER VIEW ================= */
-        #full-player { position: fixed; inset: 0; background: var(--bg-base); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow-y: auto; overflow-x: hidden; }
+        #full-player { position: fixed; inset: 0; background: var(--bg-base); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; }
         #full-player.active { transform: translateY(0); }
         
+        .fp-top-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 60px; }
+
         .fp-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .fp-toggle { background: #222; border-radius: 20px; display: flex; font-size: 13px; font-weight: 500; padding: 2px; }
         .fp-toggle-btn { padding: 6px 16px; border-radius: 16px; color: var(--text-secondary); }
@@ -89,12 +87,10 @@
         .fp-title { font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 5px; }
         .fp-artist { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; }
 
-        /* Action Pills */
         .fp-actions { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; margin-bottom: 30px; flex-shrink: 0; }
         .fp-actions::-webkit-scrollbar { display: none; }
         .action-pill { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; white-space: nowrap; }
 
-        /* Player Controls */
         .fp-progress-area { padding: 0 20px; flex-shrink: 0; }
         .progress-bar-container { width: 100%; height: 4px; background: #444; border-radius: 2px; position: relative; margin-bottom: 10px; cursor: pointer; }
         .progress-bar-fill { height: 100%; background: white; width: 0%; border-radius: 2px; position: relative; }
@@ -106,16 +102,19 @@
         .btn-play-pause { width: 64px; height: 64px; border-radius: 50%; background: white; color: black; }
         .btn-play-pause .material-symbols-outlined { font-size: 36px; font-variation-settings: 'FILL' 1; }
 
-        /* Bottom Tabs Player & Menu Berikutnya */
-        .fp-bottom-tabs { display: flex; justify-content: space-around; font-size: 14px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        .tab { flex: 1; text-align: center; cursor: pointer; padding: 15px 0; position: relative; }
+        /* ================= BOTTOM SHEET (BERIKUTNYA/LIRIK/TERKAIT) ================= */
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; right: 0; height: 75vh; background: var(--bg-surface); border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 50px)); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.7); z-index: 2100; }
+        .bottom-sheet.expanded { transform: translateY(0); }
+        
+        .fp-bottom-tabs { display: flex; justify-content: space-around; font-size: 14px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; height: 50px; cursor: pointer; }
+        .tab { flex: 1; text-align: center; padding: 15px 0; position: relative; }
         .tab.active { color: white; }
         .tab.active::after { content: ''; position: absolute; bottom: 0; left: 15%; right: 15%; height: 2px; background: white; border-radius: 2px 2px 0 0; }
 
+        .tab-content-container { flex: 1; overflow-y: auto; }
         .tab-pane { display: none; flex-direction: column; padding-bottom: 30px; }
         .tab-pane.active { display: flex; }
 
-        /* Berikutnya Tab */
         .up-next-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .un-info { display: flex; flex-direction: column; gap: 4px; }
         .un-subtitle { font-size: 12px; color: var(--text-secondary); }
@@ -133,7 +132,6 @@
         .song-list-title { font-size: 14px; font-weight: 500; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .song-list-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
 
-        /* Lirik Tab */
         .lyrics-box { padding: 30px 20px; font-size: 20px; line-height: 1.6; font-weight: 700; color: white; white-space: pre-wrap; }
         .mxm-credit { display: flex; align-items: center; gap: 8px; padding: 0 20px 20px 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .mxm-credit img { width: 16px; height: 16px; opacity: 0.7; }
@@ -202,94 +200,97 @@
     </div>
 
     <div id="full-player">
-        <div class="fp-header">
-            <span class="material-symbols-outlined" onclick="closePlayer()" style="font-size: 30px; cursor: pointer;">expand_more</span>
-            <div class="fp-toggle">
-                <div class="fp-toggle-btn active">Lagu</div>
-                <div class="fp-toggle-btn">Video</div>
-            </div>
-            <span class="material-symbols-outlined">more_vert</span>
-        </div>
-
-        <div class="fp-video-container">
-            <div id="yt-player"></div>
-        </div>
-
-        <div class="fp-info-section">
-            <div class="fp-title" id="fp-title">Judul Lagu</div>
-            <div class="fp-artist" id="fp-artist">Nama Artis</div>
-        </div>
-
-        <div class="fp-actions">
-            <div class="action-pill"><span class="material-symbols-outlined icon-filled">thumb_up</span> 7,9 rb</div>
-            <div class="action-pill"><span class="material-symbols-outlined">thumb_down</span></div>
-            <div class="action-pill"><span class="material-symbols-outlined">chat</span> 520</div>
-            <div class="action-pill"><span class="material-symbols-outlined">library_add</span> Simpan</div>
-        </div>
-
-        <div class="fp-progress-area">
-            <div class="progress-bar-container" id="p-container" onclick="seek(event)">
-                <div class="progress-bar-fill" id="p-fill">
-                    <div class="progress-handle"></div>
+        <div class="fp-top-content" onclick="closeBottomSheet()">
+            <div class="fp-header">
+                <span class="material-symbols-outlined" onclick="closePlayer()" style="font-size: 30px; cursor: pointer;">expand_more</span>
+                <div class="fp-toggle">
+                    <div class="fp-toggle-btn active">Lagu</div>
+                    <div class="fp-toggle-btn">Video</div>
                 </div>
+                <span class="material-symbols-outlined">more_vert</span>
             </div>
-            <div class="time-info">
-                <span id="t-current">0:00</span>
-                <span id="t-total">0:00</span>
+
+            <div class="fp-video-container">
+                <div id="yt-player"></div>
             </div>
-        </div>
 
-        <div class="fp-main-controls">
-            <button class="btn-control"><span class="material-symbols-outlined" style="font-size:28px;">shuffle</span></button>
-            <button class="btn-control" onclick="prevSong()"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span></button>
-            <button class="btn-control btn-play-pause" onclick="togglePlay()"><span class="material-symbols-outlined icon-filled" id="fp-play-btn">play_arrow</span></button>
-            <button class="btn-control" onclick="nextSong()"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span></button>
-            <button class="btn-control"><span class="material-symbols-outlined" style="font-size:28px;">repeat</span></button>
-        </div>
+            <div class="fp-info-section">
+                <div class="fp-title" id="fp-title">Judul Lagu</div>
+                <div class="fp-artist" id="fp-artist">Nama Artis</div>
+            </div>
 
-        <div class="fp-bottom-tabs">
-            <div class="tab active" onclick="switchTab('berikutnya')">BERIKUTNYA</div>
-            <div class="tab" onclick="switchTab('lirik')">LIRIK</div>
-            <div class="tab" onclick="switchTab('terkait')">TERKAIT</div>
-        </div>
+            <div class="fp-actions">
+                <div class="action-pill"><span class="material-symbols-outlined icon-filled">thumb_up</span> 7,9 rb</div>
+                <div class="action-pill"><span class="material-symbols-outlined">thumb_down</span></div>
+                <div class="action-pill"><span class="material-symbols-outlined">chat</span> 520</div>
+                <div class="action-pill"><span class="material-symbols-outlined">library_add</span> Simpan</div>
+            </div>
 
-        <div class="tab-content-container">
-            <div id="tab-berikutnya" class="tab-pane active">
-                <div class="up-next-header">
-                    <div class="un-info">
-                        <span class="un-subtitle">Diputar dari</span>
-                        <span class="un-title" id="un-head-title">Radio Musik</span>
+            <div class="fp-progress-area">
+                <div class="progress-bar-container" id="p-container" onclick="seek(event); event.stopPropagation();">
+                    <div class="progress-bar-fill" id="p-fill">
+                        <div class="progress-handle"></div>
                     </div>
-                    <button class="un-save-btn">
-                        <span class="material-symbols-outlined" style="font-size: 20px;">playlist_add</span> Simpan
-                    </button>
                 </div>
-                <div class="un-filters">
-                    <div class="un-pill active">All</div>
-                    <div class="un-pill">Populer</div>
-                    <div class="un-pill">Temukan</div>
-                    <div class="un-pill">Musik Populer</div>
-                    <div class="un-pill">Musik R&B</div>
-                </div>
-                <div id="up-next-list"></div>
-            </div>
-
-            <div id="tab-lirik" class="tab-pane">
-                <div class="lyrics-box" id="lyrics-content">Memuat lirik...</div>
-                <div class="mxm-credit">
-                    <span class="material-symbols-outlined">music_note</span>
-                    Lirik didukung oleh Musixmatch
+                <div class="time-info">
+                    <span id="t-current">0:00</span>
+                    <span id="t-total">0:00</span>
                 </div>
             </div>
 
-            <div id="tab-terkait" class="tab-pane">
-                <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">Tidak ada saran terkait.</div>
+            <div class="fp-main-controls">
+                <button class="btn-control" onclick="toggleShuffle(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-shuffle" style="font-size:28px; color: var(--text-secondary);">shuffle</span></button>
+                <button class="btn-control" onclick="prevSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span></button>
+                <button class="btn-control btn-play-pause" onclick="togglePlay(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" id="fp-play-btn">play_arrow</span></button>
+                <button class="btn-control" onclick="nextSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span></button>
+                <button class="btn-control" onclick="toggleRepeat(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-repeat" style="font-size:28px; color: var(--text-secondary);">repeat</span></button>
+            </div>
+        </div>
+
+        <div class="bottom-sheet" id="bottom-sheet">
+            <div class="fp-bottom-tabs">
+                <div class="tab active" onclick="toggleBottomSheet('berikutnya', event)">BERIKUTNYA</div>
+                <div class="tab" onclick="toggleBottomSheet('lirik', event)">LIRIK</div>
+                <div class="tab" onclick="toggleBottomSheet('terkait', event)">TERKAIT</div>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-berikutnya" class="tab-pane active">
+                    <div class="up-next-header">
+                        <div class="un-info">
+                            <span class="un-subtitle">Diputar dari</span>
+                            <span class="un-title" id="un-head-title">Radio Musik</span>
+                        </div>
+                        <button class="un-save-btn">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">playlist_add</span> Simpan
+                        </button>
+                    </div>
+                    <div class="un-filters">
+                        <div class="un-pill active">All</div>
+                        <div class="un-pill">Populer</div>
+                        <div class="un-pill">Temukan</div>
+                        <div class="un-pill">Musik Populer</div>
+                        <div class="un-pill">Musik R&B</div>
+                    </div>
+                    <div id="up-next-list"></div>
+                </div>
+
+                <div id="tab-lirik" class="tab-pane">
+                    <div class="lyrics-box" id="lyrics-content">Memuat lirik...</div>
+                    <div class="mxm-credit">
+                        <span class="material-symbols-outlined">music_note</span>
+                        Lirik didukung oleh Musixmatch
+                    </div>
+                </div>
+
+                <div id="tab-terkait" class="tab-pane">
+                    <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">Tidak ada saran terkait.</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Playlist lengkap dengan contoh penambahan lirik di beberapa lagu pertama
         const myPlaylist = [
             { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo", lyrics: "Duhai calon mantu idaman\nSenyummu manis bagaikan rembulan\n...\n(Contoh Lirik - Tambahkan teks aslinya di kode)" },
             { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main!", artist: "antinrml", lyrics: "Kita cuma temen\nTapi kok rasanya beda\nMain-main doang\nTapi hati ga bisa bohong\n...\n(Contoh Lirik)" },
@@ -330,6 +331,10 @@
         let player;
         let currentIndex = 0;
         let playerReady = false;
+        
+        // Status Acak (Shuffle) dan Ulang (Repeat)
+        let isShuffle = false;
+        let repeatMode = 0; // 0 = tidak ulang, 1 = ulang semua, 2 = ulang satu lagu
 
         // Render Home Grid
         function renderUI(query = '') {
@@ -368,7 +373,7 @@
                 }
 
                 listContainer.innerHTML += `
-                    <div class="song-list-item" onclick="playSong(${i})">
+                    <div class="song-list-item" onclick="playSong(${i}); closeBottomSheet();">
                         <img src="${thumb}" alt="Thumb">
                         <div class="song-list-info">
                             <div class="song-list-title" style="${i === currentIndex ? 'color: white; font-weight: 700;' : ''}">${song.title}</div>
@@ -380,13 +385,28 @@
             });
         }
 
-        // Logic Tab Menu
-        function switchTab(tabId) {
+        // Fungsi Bottom Sheet (Mentok bawah & meluas)
+        function toggleBottomSheet(tabId, event) {
+            const sheet = document.getElementById('bottom-sheet');
+            const currentActive = document.querySelector('.tab.active');
+            
+            // Jika diklik di tab yang sama dan sedang terbuka, tutup
+            if (sheet.classList.contains('expanded') && currentActive === event.currentTarget) {
+                closeBottomSheet();
+                return;
+            }
+
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
 
-            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            event.currentTarget.classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            sheet.classList.add('expanded');
+        }
+
+        function closeBottomSheet() {
+            document.getElementById('bottom-sheet').classList.remove('expanded');
         }
 
         // YouTube API Setup
@@ -426,8 +446,17 @@
             openPlayer();
         }
 
+        // Logika Acak dan Next
         function nextSong() {
-            currentIndex = (currentIndex + 1) % myPlaylist.length;
+            if (isShuffle) {
+                let randomIdx = currentIndex;
+                while (randomIdx === currentIndex && myPlaylist.length > 1) {
+                    randomIdx = Math.floor(Math.random() * myPlaylist.length);
+                }
+                currentIndex = randomIdx;
+            } else {
+                currentIndex = (currentIndex + 1) % myPlaylist.length;
+            }
             playSong(currentIndex);
         }
 
@@ -441,15 +470,47 @@
             player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
         }
 
+        // Toggle Fungsi Acak (Shuffle)
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            const btn = document.getElementById('btn-shuffle');
+            btn.style.color = isShuffle ? 'white' : 'var(--text-secondary)';
+        }
+
+        // Toggle Fungsi Ulang (Repeat)
+        function toggleRepeat() {
+            repeatMode = (repeatMode + 1) % 3;
+            const btn = document.getElementById('btn-repeat');
+            if (repeatMode === 0) {
+                btn.innerText = 'repeat';
+                btn.style.color = 'var(--text-secondary)';
+            } else if (repeatMode === 1) {
+                btn.innerText = 'repeat';
+                btn.style.color = 'white';
+            } else if (repeatMode === 2) {
+                btn.innerText = 'repeat_one';
+                btn.style.color = 'white';
+            }
+        }
+
         function onStateChange(e) {
             const fpIcon = document.getElementById('fp-play-btn');
             const mIcon = document.getElementById('m-play-btn');
             
             if(e.data === YT.PlayerState.PLAYING) {
                 fpIcon.innerText = 'pause'; mIcon.innerText = 'pause';
-            } else {
+            } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.UNSTARTED) {
                 fpIcon.innerText = 'play_arrow'; mIcon.innerText = 'play_arrow';
-                if(e.data === YT.PlayerState.ENDED) nextSong();
+            } else if(e.data === YT.PlayerState.ENDED) {
+                // Logika Repeat / Auto-next
+                if (repeatMode === 2) {
+                    player.seekTo(0);
+                    player.playVideo();
+                } else if (repeatMode === 1 || isShuffle || currentIndex < myPlaylist.length - 1) {
+                    nextSong();
+                } else {
+                    // Berhenti jika sampai akhir dan tanpa repeat
+                }
             }
         }
 
@@ -457,25 +518,21 @@
             const song = myPlaylist[idx];
             const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
             
-            // Mini Player Update
             document.getElementById('m-title').innerText = song.title;
             document.getElementById('m-artist').innerText = song.artist;
             document.getElementById('m-thumb').src = thumb;
             document.getElementById('mini-player').classList.remove('hidden');
             
-            // Full Player Update
             document.getElementById('fp-title').innerText = song.title;
             document.getElementById('fp-artist').innerText = song.artist;
             
-            // Update Tab Lirik
             const lyricsContainer = document.getElementById('lyrics-content');
             if (song.lyrics) {
                 lyricsContainer.innerText = song.lyrics;
             } else {
-                lyricsContainer.innerHTML = `<span style="color: var(--text-secondary); font-weight: 500; font-size: 16px;">Lirik untuk lagu ini belum ditambahkan secara manual di dalam kode (playlist array).</span>`;
+                lyricsContainer.innerHTML = `<span style="color: var(--text-secondary); font-weight: 500; font-size: 16px;">Lirik untuk lagu ini belum ditambahkan secara manual di dalam kode.</span>`;
             }
 
-            // Refresh UI Berikutnya
             renderUpNextList();
         }
 
@@ -506,9 +563,11 @@
             player.seekTo(pos * player.getDuration());
         }
 
-        // UI Toggles
         function openPlayer() { document.getElementById('full-player').classList.add('active'); }
-        function closePlayer() { document.getElementById('full-player').classList.remove('active'); }
+        function closePlayer() { 
+            document.getElementById('full-player').classList.remove('active'); 
+            closeBottomSheet();
+        }
 
         let searchActive = false;
         function toggleSearch() {
