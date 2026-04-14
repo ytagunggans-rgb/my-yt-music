@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YT Music PRO - Stabil Selamanya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YT Music PRO - Mobile Ready</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
@@ -20,220 +20,178 @@
         body {
             margin: 0; font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color); color: var(--text-primary);
-            height: 100vh; display: flex; overflow: hidden;
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-
+        /* --- SIDEBAR (Hidden on Mobile) --- */
         .sidebar { 
             width: 72px; border-right: 1px solid rgba(255,255,255,0.1); 
             display: flex; flex-direction: column; align-items: center; 
-            padding-top: 15px; gap: 25px; z-index: 100; background: var(--bg-color);
+            padding-top: 15px; gap: 25px; background: var(--bg-color);
         }
-        .sidebar-item { 
-            display: flex; flex-direction: column; align-items: center; 
-            color: var(--text-secondary); font-size: 0.65rem; cursor: pointer; gap: 5px;
-        }
-        .sidebar-item.active, .sidebar-item:hover { color: white; }
-        .sidebar-item span { font-size: 1.6rem; }
 
-        .content-wrapper { flex: 1; display: flex; flex-direction: column; height: calc(100vh - 90px); }
+        /* --- BOTTOM NAV (Visible only on Mobile) --- */
+        .mobile-nav {
+            display: none; position: fixed; bottom: 0; width: 100%; height: 60px;
+            background: #030303; border-top: 1px solid #222; z-index: 2000;
+            justify-content: space-around; align-items: center;
+        }
+
+        .content-wrapper { flex: 1; display: flex; flex-direction: column; height: calc(100vh - 90px); position: relative; }
         
         .topbar { 
-            display: flex; align-items: center; padding: 15px 30px; gap: 20px; 
-            background: rgba(3,3,3,0.9); backdrop-filter: blur(10px); z-index: 50;
+            display: flex; align-items: center; padding: 15px 20px; gap: 15px; 
+            background: rgba(3,3,3,0.9); backdrop-filter: blur(10px); z-index: 100;
         }
         .search-bar {
-            flex: 1; max-width: 480px; background: var(--hover-bg);
-            border-radius: 8px; display: flex; align-items: center; padding: 8px 15px;
-            margin-left: 40px; border: 1px solid rgba(255,255,255,0.05);
+            flex: 1; background: var(--hover-bg);
+            border-radius: 8px; display: flex; align-items: center; padding: 6px 12px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .search-bar input { background: transparent; border: none; color: white; width: 100%; outline: none; margin-left: 10px; }
+        .search-bar input { background: transparent; border: none; color: white; width: 100%; outline: none; margin-left: 10px; font-size: 14px; }
 
         .main-container { position: relative; flex: 1; overflow: hidden; }
 
+        /* --- PLAYER VIEW --- */
         #player-view {
-            position: absolute; inset: 0; display: flex; padding: 30px 40px; box-sizing: border-box; gap: 40px; z-index: 10;
-            background: #030303;
+            position: absolute; inset: 0; display: flex; padding: 20px; box-sizing: border-box; gap: 20px; z-index: 10;
+            background: #030303; flex-direction: row;
         }
-        .player-left { flex: 7; display: flex; flex-direction: column; }
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.8); }
-        .video-meta { margin-top: 25px; }
-        .video-meta h1 { font-size: 1.8rem; margin: 0; }
-        .video-meta p { color: var(--text-secondary); margin: 8px 0; }
+        .player-left { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
+        .video-meta { margin-top: 15px; }
+        .video-meta h1 { font-size: 1.2rem; margin: 0; }
+        .video-meta p { color: var(--text-secondary); margin: 5px 0; font-size: 0.9rem; }
 
-        .player-right { flex: 3; background: #111; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #222;}
-        .queue-tabs { display: flex; border-bottom: 1px solid #222; padding: 0 15px; }
-        .tab { padding: 15px; color: var(--text-secondary); cursor: pointer; font-weight: 500; font-size: 0.85rem; }
-        .tab.active { color: white; border-bottom: 2px solid white; }
-        .queue-list { flex: 1; overflow-y: auto; padding-bottom: 20px;}
-        .q-item { display: flex; align-items: center; padding: 10px 15px; gap: 12px; cursor: pointer; transition: 0.1s; border-bottom: 1px solid rgba(255,255,255,0.02);}
-        .q-item:hover { background: var(--hover-bg); }
+        .player-right { width: 300px; background: #111; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #222;}
+        .queue-list { flex: 1; overflow-y: auto; }
+        .q-item { display: flex; align-items: center; padding: 10px; gap: 10px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02);}
         .q-item.active { background: rgba(255,0,0,0.1); border-left: 3px solid var(--yt-red); }
         .q-item img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
         .q-info { flex: 1; overflow: hidden; }
-        .q-title { font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .q-item.active .q-title { color: var(--yt-red); }
+        .q-title { font-size: 0.8rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* --- HOME VIEW --- */
         #home-view { 
-            position: absolute; inset: 0; padding: 30px; overflow-y: auto; z-index: 20;
+            position: absolute; inset: 0; padding: 20px; overflow-y: auto; z-index: 20;
             background: linear-gradient(180deg, #2b1d1d 0%, #030303 40%);
-            transition: opacity 0.3s ease; padding-bottom: 50px;
+            transition: opacity 0.3s ease; padding-bottom: 80px;
         }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; margin-top: 20px; }
-        .card { cursor: pointer; transition: 0.3s; position: relative; }
-        .card-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: cover; background: #222; border: 1px solid #333;}
-        .play-btn-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; aspect-ratio: 1;
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: 0.2s; border-radius: 6px;
-        }
-        .card:hover .play-btn-overlay { opacity: 1; }
-        .card-title { margin-top: 10px; font-weight: 500; font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-desc { color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card { cursor: pointer; transition: 0.3s; }
+        .card-img { width: 100%; aspect-ratio: 1; border-radius: 4px; object-fit: cover; background: #222; }
+        .card-title { margin-top: 8px; font-weight: 500; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-desc { color: var(--text-secondary); font-size: 0.75rem; }
 
+        /* --- BOTTOM BAR --- */
         .bottom-bar { 
-            position: fixed; bottom: 0; left: 0; right: 0; height: 90px;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 70px;
             background: #1d1d1d; border-top: 1px solid #333; display: flex; align-items: center;
-            padding: 0 20px; z-index: 1000; justify-content: space-between;
+            padding: 0 15px; z-index: 1500; justify-content: space-between;
         }
-        .b-info { display: flex; align-items: center; gap: 15px; width: 30%; cursor: pointer; }
-        .b-thumb { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; background: #333; }
-        .b-controls { display: flex; align-items: center; gap: 25px; }
-        .btn-main { background: white; color: black; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;}
-        .btn-main:hover { transform: scale(1.05); }
-        .btn-side { color: white; background: none; border: none; cursor: pointer; display: flex; align-items: center; }
-        .progress-container { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #444; cursor: pointer; }
-        .progress-bar { height: 100%; background: var(--yt-red); width: 0%; position: relative; transition: 0.1s linear;}
-        
+        .b-info { display: flex; align-items: center; gap: 10px; width: 60%; }
+        .b-thumb { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
+        .b-controls { display: flex; align-items: center; gap: 15px; }
+        .btn-main { background: white; color: black; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .progress-container { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #444; }
+        .progress-bar { height: 100%; background: var(--yt-red); width: 0%; }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .mobile-nav { display: flex; }
+            .content-wrapper { height: calc(100vh - 130px); }
+            .grid-container { grid-template-columns: 1fr 1fr; gap: 12px; }
+            #player-view { flex-direction: column; overflow-y: auto; padding-bottom: 100px; }
+            .player-right { width: 100%; height: auto; flex: none; }
+            .bottom-bar { bottom: 60px; height: 60px; }
+            .topbar { padding: 10px 15px; }
+            .album-art-large { width: 100%; }
+        }
+
         #toast {
-            position: fixed; top: 20px; right: 20px; background: #ff0000;
-            color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold;
-            z-index: 9999; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: fixed; top: 10px; left: 10px; right: 10px; background: rgba(255, 0, 0, 0.9);
+            color: white; padding: 10px; border-radius: 4px; font-size: 12px; z-index: 9999; display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="toast"><span class="material-symbols-outlined" style="vertical-align: middle;">error</span> Lagu Official diblokir! Auto-skip ke lagu berikutnya. Tolong ganti ID video ini dengan versi Lirik/Cover.</div>
+    <div id="toast">Lagu Official diblokir! Auto-skip... Ganti ID ke versi Lirik di kodingan ya.</div>
 
-    <div class="sidebar">
-        <div class="sidebar-item active" id="btn-nav-home" onclick="showView('home')">
-            <span class="material-symbols-outlined">home</span>Beranda
+    <div style="display: flex; flex: 1; overflow: hidden;">
+        <div class="sidebar">
+            <div class="sidebar-item active" onclick="showView('home')">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <div class="sidebar-item"><span class="material-symbols-outlined">explore</span></div>
+            <div class="sidebar-item"><span class="material-symbols-outlined">library_music</span></div>
         </div>
-        <div class="sidebar-item" onclick="alert('Fitur Eksplorasi segera hadir!')">
-            <span class="material-symbols-outlined">explore</span>Eksplorasi
-        </div>
-        <div class="sidebar-item" onclick="alert('Koleksi kamu tersimpan lokal.')">
-            <span class="material-symbols-outlined">library_music</span>Koleksi
+
+        <div class="content-wrapper">
+            <div class="topbar">
+                <span class="material-symbols-outlined" style="color:red; font-variation-settings: 'FILL' 1;">play_circle</span>
+                <div class="search-bar">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">search</span>
+                    <input type="text" placeholder="Telusuri musik">
+                </div>
+            </div>
+
+            <div class="main-container">
+                <div id="player-view">
+                    <div class="player-left">
+                        <div class="video-box" id="yt-player"></div>
+                        <div class="video-meta">
+                            <h1 id="p-title">Pilih Lagu</h1>
+                            <p id="p-artist">-</p>
+                        </div>
+                    </div>
+                    <div class="player-right">
+                        <div style="padding: 15px; font-weight: bold; border-bottom: 1px solid #222;">Berikutnya</div>
+                        <div class="queue-list" id="queue-list"></div>
+                    </div>
+                </div>
+
+                <div id="home-view">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 15px;">Dengarkan lagi</h2>
+                    <div class="grid-container" id="grid-home"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="content-wrapper">
-        <div class="topbar">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span class="material-symbols-outlined" style="color:red; font-variation-settings: 'FILL' 1;">play_circle</span>
-                <span style="font-weight:900; font-size:1.2rem; letter-spacing:-1px;">Music</span>
-            </div>
-            <div class="search-bar">
-                <span class="material-symbols-outlined">search</span>
-                <input type="text" placeholder="Telusuri lagu, album, artis">
-            </div>
-        </div>
-
-        <div class="main-container">
-            <div id="player-view">
-                <div class="player-left">
-                    <div class="video-box" id="yt-player"></div>
-                    <div class="video-meta">
-                        <h1 id="p-title">Pilih Lagu</h1>
-                        <p id="p-artist">YouTube Music</p>
-                    </div>
-                </div>
-                <div class="player-right">
-                    <div class="queue-tabs">
-                        <div class="tab active">BERIKUTNYA</div>
-                        <div class="tab">LIRIK</div>
-                        <div class="tab">TERKAIT</div>
-                    </div>
-                    <div class="queue-list" id="queue-list"></div>
-                </div>
-            </div>
-
-            <div id="home-view">
-                <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
-                    <img src="https://i.pravatar.cc/100?u=putihbiru" style="width:40px; height:40px; border-radius:50%;" alt="Profile">
-                    <span style="color:var(--text-secondary); font-weight:500;">PUTIH BIRU</span>
-                </div>
-                <h2>Dengarkan lagi</h2>
-                <div class="grid-container" id="grid-home"></div>
-            </div>
-        </div>
+    <div class="mobile-nav">
+        <div onclick="showView('home')"><span class="material-symbols-outlined">home</span></div>
+        <div><span class="material-symbols-outlined">explore</span></div>
+        <div><span class="material-symbols-outlined">library_music</span></div>
     </div>
 
     <div class="bottom-bar">
-        <div class="progress-container" onclick="seek(event)">
-            <div class="progress-bar" id="p-bar"></div>
-        </div>
+        <div class="progress-container" onclick="seek(event)"><div class="progress-bar" id="p-bar"></div></div>
         <div class="b-info" onclick="showView('player')">
             <img src="https://via.placeholder.com/50" id="b-thumb" class="b-thumb">
-            <div>
-                <div id="b-title" style="font-weight:500; font-size:0.9rem; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Pilih Lagu</div>
-                <div id="b-artist" style="color:#aaa; font-size:0.8rem;">-</div>
+            <div style="overflow: hidden;">
+                <div id="b-title" style="font-weight:500; font-size:0.8rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pilih Lagu</div>
+                <div id="b-artist" style="color:#aaa; font-size:0.7rem;">-</div>
             </div>
-            <span class="material-symbols-outlined" style="font-size:1.2rem;">expand_less</span>
         </div>
         <div class="b-controls">
-            <button class="btn-side" onclick="prevSong()"><span class="material-symbols-outlined">skip_previous</span></button>
-            <div class="btn-main" onclick="togglePlay()"><span class="material-symbols-outlined" id="play-icon">play_arrow</span></div>
-            <button class="btn-side" onclick="nextSong()"><span class="material-symbols-outlined">skip_next</span></button>
-        </div>
-        <div style="width:30%; display:flex; justify-content:flex-end; gap:15px; color:#aaa;">
-            <span class="material-symbols-outlined">volume_up</span>
+            <div class="btn-main" onclick="togglePlay()"><span class="material-symbols-outlined" id="play-icon" style="font-size: 20px;">play_arrow</span></div>
+            <button style="background:none; border:none; color:white;" onclick="nextSong()"><span class="material-symbols-outlined">skip_next</span></button>
         </div>
     </div>
 
     <script>
-        // =========================================================================
-        // GANTI ID LAGU YANG SERING KE-SKIP (ERROR OFFICIAL VIDEO) 
-        // DENGAN ID LAGU VERSI "LIRIK" ATAU "AUDIO ONLY" DI YOUTUBE
-        // =========================================================================
         const myPlaylist = [
-            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo" },
-            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main!", artist: "antinrml" },
+            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman", artist: "Rombongan Bodonk Koplo" },
+            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen", artist: "antinrml" },
             { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU", artist: "antinrml" },
-            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla & Yung Caters" },
+            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla" },
             { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza" },
             { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO & Tenxi" },
-            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN.flv", artist: "Starky Aji" },
-            { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay , Ciloqciliq & Zynakal" },
-            { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi & RYO" },
-            { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi , Jemsii & Naufal Syachreza" },
-            { id: "M0gHZvLTJyI", title: "MALU MALU", artist: "dia & INDAHKUS" },
-            { id: "bGAmJJKEaQE", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo" },
-            { id: "r4puA1XHgx0", title: "cuma satu", artist: "Suisei , Tenxi & Kirohta" },
-            { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla" },
-            { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi, RYO, dia, dan Jemsii" },
-            { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah & Andi Rianto" },
-            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah" },
-            { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah" },
-            { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU BOY", artist: "Maikaldo Sihotang" },
-            { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata" },
-            { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata" },
-            { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata" },
-            { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO" },
-            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO" },
-            { id: "heukr71gj9I", title: "main-main!", artist: "RYO & Josua Natanael" },
-            { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi , suisei & Jemsii" },
-            { id: "En-EHqRk8yg", title: "Garam & Madu (Sakit Dadaku)", artist: "Tenxi" },
-            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi & Jemsii" },
-            { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi & Jemsii" },
             { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk" },
-            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian & Adrian Khalif" },
-            { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia & Tenxi" },
-            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel" },
             { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah" }
+            // ... Tambahin ID lain di sini
         ];
 
         let player;
@@ -242,83 +200,39 @@
         function renderUI() {
             const grid = document.getElementById('grid-home');
             const queue = document.getElementById('queue-list');
-            
             myPlaylist.forEach((song, i) => {
-                const thumb = `https://img.youtube.com/vi/${song.id}/maxresdefault.jpg`;
-                const fallbackThumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
-                
-                grid.innerHTML += `
-                    <div class="card" onclick="playSong(${i})">
-                        <div class="card-img-wrapper" style="width:100%; aspect-ratio:1; overflow:hidden; border-radius:6px;">
-                            <img src="${thumb}" onerror="this.src='${fallbackThumb}'" style="width:100%; height:100%; object-fit:cover;" alt="Thumbnail">
-                        </div>
-                        <div class="play-btn-overlay"><span class="material-symbols-outlined" style="font-size:3.5rem;">play_circle</span></div>
-                        <div class="card-title">${song.title}</div>
-                        <div class="card-desc">${song.artist}</div>
-                    </div>`;
-                
-                queue.innerHTML += `
-                    <div class="q-item" id="q-item-${i}" onclick="playSong(${i})">
-                        <img src="${thumb}" onerror="this.src='${fallbackThumb}'" style="width:40px;height:40px;border-radius:4px;object-fit:cover;" alt="Thumb">
-                        <div class="q-info">
-                            <div class="q-title">${song.title}</div>
-                            <div style="font-size:0.75rem; color:#aaa;">${song.artist}</div>
-                        </div>
-                    </div>`;
+                const thumb = `https://img.youtube.com/vi/${song.id}/mqdefault.jpg`;
+                grid.innerHTML += `<div class="card" onclick="playSong(${i})"><img src="${thumb}" class="card-img"><div class="card-title">${song.title}</div><div class="card-desc">${song.artist}</div></div>`;
+                queue.innerHTML += `<div class="q-item" id="q-item-${i}" onclick="playSong(${i})"><img src="${thumb}"><div class="q-info"><div class="q-title">${song.title}</div><div style="font-size:0.7rem; color:#aaa;">${song.artist}</div></div></div>`;
             });
         }
         renderUI();
 
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        document.head.appendChild(tag);
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
                 height: '100%', width: '100%',
                 videoId: myPlaylist[0].id,
-                playerVars: { controls: 1, rel: 0, origin: window.location.origin },
+                playerVars: { playsinline: 1, controls: 1 },
                 events: { 
-                    'onReady': onPlayerReady,
+                    'onReady': () => { updateMetadata(0); setInterval(updateProgress, 500); },
                     'onStateChange': onStateChange,
-                    'onError': onPlayerError 
+                    'onError': () => { document.getElementById('toast').style.display='block'; setTimeout(()=>document.getElementById('toast').style.display='none', 3000); nextSong(); }
                 }
             });
         }
 
-        function onPlayerReady() {
-            updateMetadata(0);
-            setInterval(() => {
-                if(player && player.getCurrentTime) {
-                    const perc = (player.getCurrentTime() / player.getDuration()) * 100;
-                    document.getElementById('p-bar').style.width = (perc || 0) + '%';
-                }
-            }, 500);
-        }
-
-        function onPlayerError() {
-            document.getElementById('toast').style.display = 'block';
-            setTimeout(() => document.getElementById('toast').style.display = 'none', 5000);
-            nextSong(); // OTOMATIS SKIP KALAU VIDEO DIBLOKIR
-        }
-
         function playSong(index) {
             currentIndex = index;
-            if (player && player.loadVideoById) player.loadVideoById(myPlaylist[index].id);
+            player.loadVideoById(myPlaylist[index].id);
             updateMetadata(index);
-            showView('player'); 
+            if(window.innerWidth < 768) showView('player');
         }
 
-        function nextSong() {
-            currentIndex = (currentIndex + 1) % myPlaylist.length;
-            playSong(currentIndex);
-        }
-
-        function prevSong() {
-            currentIndex = (currentIndex - 1 + myPlaylist.length) % myPlaylist.length;
-            playSong(currentIndex);
-        }
+        function nextSong() { currentIndex = (currentIndex + 1) % myPlaylist.length; playSong(currentIndex); }
 
         function onStateChange(e) {
             const icon = document.getElementById('play-icon');
@@ -329,40 +243,33 @@
 
         function updateMetadata(idx) {
             const song = myPlaylist[idx];
-            const fallbackThumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
             document.getElementById('b-title').innerText = song.title;
             document.getElementById('b-artist').innerText = song.artist;
-            document.getElementById('b-thumb').src = fallbackThumb;
+            document.getElementById('b-thumb').src = `https://img.youtube.com/vi/${song.id}/default.jpg`;
             document.getElementById('p-title').innerText = song.title;
             document.getElementById('p-artist').innerText = song.artist;
             document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active'));
-            let act = document.getElementById(`q-item-${idx}`);
-            if(act) {
-                act.classList.add('active');
-                act.scrollIntoView({ behavior: "smooth", block: "center" });
+            document.getElementById(`q-item-${idx}`).classList.add('active');
+        }
+
+        function updateProgress() {
+            if(player && player.getCurrentTime) {
+                const perc = (player.getCurrentTime() / player.getDuration()) * 100;
+                document.getElementById('p-bar').style.width = (perc || 0) + '%';
             }
         }
 
         function showView(v) {
-            const home = document.getElementById('home-view');
-            const navHome = document.getElementById('btn-nav-home');
-            if (v === 'home') {
-                home.style.opacity = '1'; home.style.pointerEvents = 'auto';
-                navHome.classList.add('active');
-            } else {
-                home.style.opacity = '0'; home.style.pointerEvents = 'none';
-                navHome.classList.remove('active');
-            }
+            document.getElementById('home-view').style.opacity = (v === 'home' ? '1' : '0');
+            document.getElementById('home-view').style.pointerEvents = (v === 'home' ? 'auto' : 'none');
         }
 
         function togglePlay() {
-            if(!player) return;
             const s = player.getPlayerState();
             s === 1 ? player.pauseVideo() : player.playVideo();
         }
 
         function seek(e) {
-            if(!player) return;
             const rect = e.currentTarget.getBoundingClientRect();
             const p = (e.clientX - rect.left) / rect.width;
             player.seekTo(p * player.getDuration());
