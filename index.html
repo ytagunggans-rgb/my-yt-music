@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YT Music Clone - Real Functions</title>
+    <title>YT Music Clone - Ultimate Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
@@ -27,9 +27,11 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
         .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
-        /* ================= HOME VIEW ================= */
-        #home-view { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 140px; }
+        /* ================= VIEWS (HALAMAN NAVIGASI) ================= */
+        .page-view { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 140px; display: none; }
+        .page-view.active { display: block; }
         
+        /* HEADER & SEARCH */
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; position: sticky; top: 0; background: rgba(3,3,3,0.95); z-index: 50; }
         .logo-area { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .logo-area .material-symbols-outlined { color: var(--yt-red); font-size: 28px; }
@@ -40,6 +42,7 @@
         .search-container { display: none; flex: 1; margin-left: 15px; margin-right: 15px; }
         .search-container input { width: 100%; background: #333; border: none; color: white; padding: 8px 15px; border-radius: 20px; outline: none; }
 
+        /* BERANDA ITEMS */
         .category-pills { display: flex; gap: 10px; padding: 0 20px 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .category-pills::-webkit-scrollbar { display: none; }
         .pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;}
@@ -56,9 +59,13 @@
         .card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; align-items: flex-end; padding: 10px; }
         .card-title { font-size: 13px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
 
+        /* OTHER PAGES DUMMY CONTENT */
+        .dummy-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; color: var(--text-secondary); text-align: center; padding: 20px;}
+        .dummy-content .material-symbols-outlined { font-size: 80px; margin-bottom: 20px; opacity: 0.5; }
+
         /* ================= BOTTOM NAV ================= */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--bg-surface); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: 5px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; gap: 4px; cursor: pointer; transition: color 0.2s;}
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; gap: 4px; cursor: pointer; transition: color 0.2s; width: 20%;}
         .nav-item.active { color: var(--text-primary); }
         .nav-item span { font-size: 24px; }
 
@@ -83,7 +90,7 @@
         .fp-toggle-btn.active { background: #444; color: white; }
 
         .fp-video-container { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 20px; position: relative; flex-shrink: 0; }
-        #yt-player { width: 100%; height: 100%; pointer-events: none; /* Cegah iframe ngeblok touch */ }
+        #yt-player { width: 100%; height: 100%; pointer-events: none;}
 
         .fp-info-section { padding: 0 20px; flex-shrink: 0; }
         .fp-title { font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 5px; }
@@ -110,7 +117,6 @@
         .bottom-sheet.expanded { transform: translateY(0); }
         
         .fp-bottom-tabs { display: flex; justify-content: space-around; font-size: 14px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; height: 50px; cursor: pointer; user-select: none; touch-action: none;}
-        /* Handle penanda swipe */
         .fp-bottom-tabs::before { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; }
         .tab { flex: 1; text-align: center; padding: 15px 0; position: relative; }
         .tab.active { color: white; }
@@ -142,6 +148,30 @@
         .mxm-credit { display: flex; align-items: center; gap: 8px; padding: 0 20px 20px 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
         .mxm-credit img { width: 16px; height: 16px; opacity: 0.7; }
 
+        /* ================= MODALS (POP-UPS) ================= */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; display: none; flex-direction: column; justify-content: flex-end; }
+        .modal-content { background: var(--bg-surface); padding: 20px; border-radius: 20px 20px 0 0; animation: slideUp 0.3s; max-height: 80vh; display: flex; flex-direction: column; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+        .modal-body { overflow-y: auto; flex: 1; }
+        
+        /* Modal Komentar */
+        .comment-item { display: flex; gap: 12px; margin-bottom: 15px; }
+        .comment-item img { width: 36px; height: 36px; border-radius: 50%; }
+        .comment-text { font-size: 14px; }
+        .comment-author { font-weight: bold; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;}
+        .comment-input-area { display: flex; gap: 10px; margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);}
+        .comment-input-area input { flex: 1; background: transparent; border: none; border-bottom: 1px solid white; color: white; outline: none; }
+        
+        /* Modal Menu 3 Titik & Playlist */
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; cursor: pointer; font-size: 15px; }
+        .menu-item .material-symbols-outlined { color: var(--text-secondary); }
+        
+        /* Modal Equalizer */
+        .eq-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .eq-slider { flex: 1; margin: 0 15px; accent-color: white; }
+
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; z-index: 9999; display: none; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
     </style>
 </head>
@@ -149,17 +179,15 @@
 
     <div id="toast">Notifikasi...</div>
 
-    <div id="home-view">
+    <div id="view-Beranda" class="page-view active">
         <div class="top-header">
             <div class="logo-area" id="main-logo" onclick="window.location.reload()">
                 <span class="material-symbols-outlined icon-filled">play_circle</span>
                 <span>Music</span>
             </div>
-            
             <div class="search-container" id="search-box">
                 <input type="text" id="searchInput" placeholder="Telusuri lagu dari playlist...">
             </div>
-
             <div class="header-icons">
                 <span class="material-symbols-outlined" onclick="uiAction('Mencari perangkat TV...')">cast</span>
                 <span class="material-symbols-outlined" id="search-icon" onclick="toggleSearch()">search</span>
@@ -183,6 +211,35 @@
         </div>
 
         <div class="grid-container" id="grid-home"></div>
+    </div>
+
+    <div id="view-Sampel" class="page-view">
+        <div class="dummy-content">
+            <span class="material-symbols-outlined">play_circle</span>
+            <h2>Sampel Musik</h2>
+            <p>Geser ke atas untuk menemukan musik baru secara instan, layaknya Shorts.</p>
+        </div>
+    </div>
+    <div id="view-Eksplorasi" class="page-view">
+        <div class="dummy-content">
+            <span class="material-symbols-outlined">explore</span>
+            <h2>Eksplorasi</h2>
+            <p>Temukan rilisan baru, musik terpopuler, dan mood untuk hari ini.</p>
+        </div>
+    </div>
+    <div id="view-Koleksi" class="page-view">
+        <div class="dummy-content">
+            <span class="material-symbols-outlined">library_music</span>
+            <h2>Koleksi Kamu</h2>
+            <p>Daftar playlist, lagu yang disukai, dan unduhan ada di sini.</p>
+        </div>
+    </div>
+    <div id="view-Upgrade" class="page-view">
+        <div class="dummy-content">
+            <span class="material-symbols-outlined">workspace_premium</span>
+            <h2>Dapatkan Premium</h2>
+            <p>Dengarkan musik tanpa iklan, putar di latar belakang, dan unduh lagu.</p>
+        </div>
     </div>
 
     <div class="mini-player hidden" id="mini-player" onclick="openPlayer()">
@@ -213,7 +270,7 @@
                     <div class="fp-toggle-btn active" onclick="toggleMode(this)">Lagu</div>
                     <div class="fp-toggle-btn" onclick="toggleMode(this)">Video</div>
                 </div>
-                <span class="material-symbols-outlined" style="cursor: pointer;" onclick="uiAction('Opsi tambahan...')">more_vert</span>
+                <span class="material-symbols-outlined" style="cursor: pointer;" onclick="openModal('menu-modal')">more_vert</span>
             </div>
 
             <div class="fp-video-container" onclick="togglePlay()">
@@ -226,14 +283,14 @@
             </div>
 
             <div class="fp-actions">
-                <div class="action-pill" id="btn-like" onclick="toggleLike()"><span class="material-symbols-outlined" id="icon-like">thumb_up</span> <span id="like-val">7,9 rb</span></div>
-                <div class="action-pill" onclick="uiAction('Dislike terkirim secara anonim')"><span class="material-symbols-outlined">thumb_down</span></div>
-                <div class="action-pill" onclick="uiAction('Komentar tidak tersedia untuk track audio')"><span class="material-symbols-outlined">chat</span> 520</div>
-                <div class="action-pill" onclick="toggleSavePlaylist()"><span class="material-symbols-outlined" id="save-icon">library_add</span> <span id="save-txt">Simpan</span></div>
+                <div class="action-pill" id="btn-like" onclick="toggleLike()"><span class="material-symbols-outlined" id="icon-like">thumb_up</span> <span id="like-val">1,2 rb</span></div>
+                <div class="action-pill" onclick="btnDislike(this)"><span class="material-symbols-outlined">thumb_down</span></div>
+                <div class="action-pill" onclick="openModal('comment-modal')"><span class="material-symbols-outlined">chat</span> <span id="comment-val">120</span></div>
+                <div class="action-pill" onclick="openModal('save-modal')"><span class="material-symbols-outlined" id="save-icon">library_add</span> <span id="save-txt">Simpan</span></div>
             </div>
 
             <div class="fp-progress-area">
-                <div class="progress-bar-container" id="p-container" onclick="seek(event);">
+                <div class="progress-bar-container" id="p-container" onclick="seek(event); event.stopPropagation();">
                     <div class="progress-bar-fill" id="p-fill">
                         <div class="progress-handle"></div>
                     </div>
@@ -245,11 +302,11 @@
             </div>
 
             <div class="fp-main-controls">
-                <button class="btn-control" onclick="toggleShuffle();"><span class="material-symbols-outlined" id="btn-shuffle" style="font-size:28px; color: var(--text-secondary);">shuffle</span></button>
-                <button class="btn-control" onclick="prevSong();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span></button>
-                <button class="btn-control btn-play-pause" onclick="togglePlay();"><span class="material-symbols-outlined icon-filled" id="fp-play-btn">play_arrow</span></button>
-                <button class="btn-control" onclick="nextSong();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span></button>
-                <button class="btn-control" onclick="toggleRepeat();"><span class="material-symbols-outlined" id="btn-repeat" style="font-size:28px; color: var(--text-secondary);">repeat</span></button>
+                <button class="btn-control" onclick="toggleShuffle(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-shuffle" style="font-size:28px; color: var(--text-secondary);">shuffle</span></button>
+                <button class="btn-control" onclick="prevSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span></button>
+                <button class="btn-control btn-play-pause" onclick="togglePlay(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" id="fp-play-btn">play_arrow</span></button>
+                <button class="btn-control" onclick="nextSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span></button>
+                <button class="btn-control" onclick="toggleRepeat(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-repeat" style="font-size:28px; color: var(--text-secondary);">repeat</span></button>
             </div>
         </div>
 
@@ -267,7 +324,7 @@
                             <span class="un-subtitle">Diputar dari</span>
                             <span class="un-title" id="un-head-title">Playlist Putih Biru</span>
                         </div>
-                        <button class="un-save-btn" onclick="uiAction('Antrean disimpan ke koleksi')">
+                        <button class="un-save-btn" onclick="openModal('save-modal')">
                             <span class="material-symbols-outlined" style="font-size: 20px;">playlist_add</span> Simpan
                         </button>
                     </div>
@@ -292,6 +349,69 @@
                     <div style="padding: 15px 20px; font-weight: bold; font-size: 14px;">Disarankan untuk kamu</div>
                     <div id="terkait-list"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="comment-modal" onclick="closeModal('comment-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()" style="height: 60vh;">
+            <div class="modal-header">
+                Komentar <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('comment-modal')">close</span>
+            </div>
+            <div class="modal-body" id="comment-list">
+                <div class="comment-item">
+                    <img src="https://i.pravatar.cc/100?img=1">
+                    <div><div class="comment-author">Zayyin Alhamidy</div><div class="comment-text">Gila lagunya asik banget buat nugas! 🔥</div></div>
+                </div>
+                <div class="comment-item">
+                    <img src="https://i.pravatar.cc/100?img=2">
+                    <div><div class="comment-author">Novia Elsandy</div><div class="comment-text">Visual videonya juga keren sih. Nostalgia.</div></div>
+                </div>
+            </div>
+            <div class="comment-input-area">
+                <img src="https://i.pravatar.cc/100?u=putihbiru" style="width: 30px; height: 30px; border-radius: 50%;">
+                <input type="text" id="komentar-input" placeholder="Tambahkan komentar...">
+                <span class="material-symbols-outlined" style="color:var(--yt-red); cursor:pointer;" onclick="tambahKomentar()">send</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="save-modal" onclick="closeModal('save-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">Simpan video ke... <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('save-modal')">close</span></div>
+            <div class="modal-body">
+                <div class="menu-item" onclick="togglePlaylistSave('Favorit', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Favorit</div>
+                <div class="menu-item" onclick="togglePlaylistSave('Putih Biru (Lokal)', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Putih Biru (Lokal)</div>
+                <div class="menu-item" onclick="togglePlaylistSave('Santai Sore', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Santai Sore</div>
+                <div class="menu-item" style="color: var(--yt-red);"><span class="material-symbols-outlined" style="color: var(--yt-red);">add</span> Playlist Baru</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="menu-modal" onclick="closeModal('menu-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header" style="border:none; padding-bottom: 0;">Opsi Lagu</div>
+            <div class="modal-body">
+                <div class="menu-item" onclick="openModal('eq-modal'); document.getElementById('menu-modal').style.display='none';"><span class="material-symbols-outlined">tune</span> Setel Audio (Equalizer)</div>
+                <div class="menu-item" onclick="uiAction('Memulai radio berdasarkan lagu ini...')"><span class="material-symbols-outlined">sensors</span> Mulai Radio</div>
+                <div class="menu-item" onclick="uiAction('Menambahkan ke antrean berikutnya')"><span class="material-symbols-outlined">queue_music</span> Putar berikutnya</div>
+                <div class="menu-item" onclick="uiAction('Hanya tersedia untuk akun Premium')"><span class="material-symbols-outlined">download</span> Download</div>
+                <div class="menu-item" onclick="uiAction('Tautan disalin ke papan klip')"><span class="material-symbols-outlined">share</span> Bagikan</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="eq-modal" onclick="closeModal('eq-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                Audio Equalizer <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('eq-modal')">close</span>
+            </div>
+            <div style="font-size: 12px; color: var(--yt-red); margin-bottom: 15px;">*Fitur ini hanya simulasi visual. Modifikasi IFrame Audio diblokir oleh keamanan browser.</div>
+            <div class="modal-body">
+                <div class="eq-row"><span>Bass</span> <input type="range" class="eq-slider" min="0" max="100" value="70"> <span>High</span></div>
+                <div class="eq-row"><span>Mid</span> <input type="range" class="eq-slider" min="0" max="100" value="50"> <span>High</span></div>
+                <div class="eq-row"><span>Treble</span> <input type="range" class="eq-slider" min="0" max="100" value="60"> <span>High</span></div>
+                <div class="menu-item" style="justify-content: center; background: #333; border-radius: 8px; margin-top: 10px;" onclick="uiAction('Preset Headset Bass Boost Aktif')">Gunakan Preset Headset</div>
             </div>
         </div>
     </div>
@@ -373,87 +493,64 @@
             { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy", genre: "Populer" }
         ]; 
 
-        let myPlaylist = [...originalPlaylist]; // Playlist yang sedang aktif (bisa di-shuffle)
+        let myPlaylist = [...originalPlaylist]; 
         let player;
         let currentIndex = 0;
         let playerReady = false;
-        
         let isShuffle = false;
         let repeatMode = 0; 
-        
-        // Database Local Storage buat nyimpen Like
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
-        let savedPlaylist = JSON.parse(localStorage.getItem('savedPlaylist')) || false;
+        
+        // ================= FUNGSI NAVIGASI VIEW =================
+        function navTo(el, page) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${page}`).classList.add('active');
+        }
 
-        // ================= FUNGSI UI & TOMBOL =================
+        // ================= MODALS & POP-UPS =================
         function uiAction(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 2500);
         }
 
-        // Filter Grid Beranda (Fungsi Asli!)
-        function filterPlaylist(kategori, el) {
-            document.querySelectorAll('.category-pills .pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            
-            const grid = document.getElementById('grid-home');
-            grid.innerHTML = '';
-            
-            originalPlaylist.forEach((song, i) => {
-                // Filter berdasarkan genre/kategori palsu yang kita buat di array
-                if(song.genre === kategori || kategori === 'All') {
-                    const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
-                    grid.innerHTML += `
-                        <div class="card" onclick="playSongFromOriginal(${i})">
-                            <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
-                            <div class="card-overlay"><div class="card-title">${song.title}</div></div>
-                        </div>`;
-                }
-            });
-            uiAction('Menampilkan kategori: ' + kategori);
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Tombol Like Dinamis
+        function generateFakeStats(idx) {
+            // Biar angkanya acak tapi konsisten per lagu
+            let likes = (idx * 37 % 15) + 1.2;
+            let comments = (idx * 19 % 800) + 120;
+            document.getElementById('like-val').innerText = likes.toFixed(1) + ' rb';
+            document.getElementById('comment-val').innerText = comments;
         }
 
-        function playSongFromOriginal(originalIdx) {
-            const songToPlay = originalPlaylist[originalIdx];
-            // Cari index-nya di playlist aktif (buat jaga-jaga kalau lagi di-shuffle)
-            currentIndex = myPlaylist.findIndex(s => s.id === songToPlay.id);
-            playSong(currentIndex);
-        }
-
-        function navTo(el, page) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            if(page !== 'Beranda') uiAction('Membuka menu ' + page);
-        }
-
-        function toggleMode(el) {
-            document.querySelectorAll('.fp-toggle-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        // Fungsi LIKE ASLI (Simpan ke Local Storage)
         function checkLikeStatus(id) {
             const btn = document.getElementById('btn-like');
             const icon = document.getElementById('icon-like');
             if(likedSongs.includes(id)) {
-                btn.classList.add('active-btn');
-                icon.classList.add('icon-filled');
-                icon.style.color = '#fff';
+                btn.classList.add('active-btn'); icon.classList.add('icon-filled'); icon.style.color = '#fff';
             } else {
-                btn.classList.remove('active-btn');
-                icon.classList.remove('icon-filled');
-                icon.style.color = 'var(--text-primary)';
+                btn.classList.remove('active-btn'); icon.classList.remove('icon-filled'); icon.style.color = 'var(--text-primary)';
             }
         }
 
         function toggleLike() {
             const currentId = myPlaylist[currentIndex].id;
+            const btn = document.getElementById('btn-like');
+            const valSpan = document.getElementById('like-val');
+            let currentVal = parseFloat(valSpan.innerText.replace(' rb', ''));
+
             if(likedSongs.includes(currentId)) {
                 likedSongs = likedSongs.filter(id => id !== currentId);
+                valSpan.innerText = (currentVal - 0.1).toFixed(1) + ' rb';
                 uiAction('Dihapus dari video yang disukai');
             } else {
                 likedSongs.push(currentId);
+                valSpan.innerText = (currentVal + 0.1).toFixed(1) + ' rb';
                 uiAction('Ditambahkan ke video yang disukai');
             }
             localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
@@ -465,33 +562,51 @@
             uiAction('Masukan kamu membantu menyempurnakan rekomendasi');
         }
 
-        function checkSaveStatus() {
-            const icon = document.getElementById('save-icon');
-            const txt = document.getElementById('save-txt');
-            if(savedPlaylist) {
-                icon.innerText = 'library_add_check'; icon.classList.add('icon-filled'); txt.innerText = 'Tersimpan';
-            } else {
-                icon.innerText = 'library_add'; icon.classList.remove('icon-filled'); txt.innerText = 'Simpan';
+        // Fitur Komentar
+        function tambahKomentar() {
+            const input = document.getElementById('komentar-input');
+            const list = document.getElementById('comment-list');
+            if(input.value.trim() !== '') {
+                list.innerHTML = `
+                    <div class="comment-item">
+                        <img src="https://i.pravatar.cc/100?u=putihbiru">
+                        <div><div class="comment-author">Agung Pratama</div><div class="comment-text">${input.value}</div></div>
+                    </div>` + list.innerHTML;
+                input.value = '';
+                uiAction('Komentar ditambahkan');
             }
         }
 
-        function toggleSavePlaylist() {
-            savedPlaylist = !savedPlaylist;
-            localStorage.setItem('savedPlaylist', savedPlaylist);
-            checkSaveStatus();
-            uiAction(savedPlaylist ? 'Disimpan ke playlist' : 'Dihapus dari playlist');
+        // Fitur Simpan Playlist
+        function togglePlaylistSave(name, el) {
+            const icon = el.querySelector('.material-symbols-outlined');
+            if(icon.innerText === 'check_box_outline_blank') {
+                icon.innerText = 'check_box'; icon.style.color = 'var(--yt-red)';
+                uiAction(`Disimpan ke playlist ${name}`);
+            } else {
+                icon.innerText = 'check_box_outline_blank'; icon.style.color = 'var(--text-secondary)';
+                uiAction(`Dihapus dari playlist ${name}`);
+            }
         }
 
-        let searchActive = false;
-        function toggleSearch() {
-            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
-            searchActive = !searchActive;
-            if (searchActive) { logo.style.display = 'none'; sb.style.display = 'block'; document.getElementById('searchInput').focus(); }
-            else { logo.style.display = 'flex'; sb.style.display = 'none'; document.getElementById('searchInput').value = ''; renderUI(); }
+        // ================= RENDER BERANDA & FILTER =================
+        function filterPlaylist(kategori, el) {
+            document.querySelectorAll('.category-pills .pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            const grid = document.getElementById('grid-home');
+            grid.innerHTML = '';
+            originalPlaylist.forEach((song, i) => {
+                if(song.genre === kategori || kategori === 'All') {
+                    const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
+                    grid.innerHTML += `
+                        <div class="card" onclick="playSongFromOriginal(${i})">
+                            <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
+                            <div class="card-overlay"><div class="card-title">${song.title}</div></div>
+                        </div>`;
+                }
+            });
         }
-        document.getElementById('searchInput').addEventListener('input', (e) => renderUI(e.target.value));
 
-        // ================= RENDER TAMPILAN =================
         function renderUI(query = '') {
             const grid = document.getElementById('grid-home');
             grid.innerHTML = '';
@@ -507,14 +622,21 @@
         }
         renderUI();
 
-        // Fungsi Filter Antrean Asli
+        let searchActive = false;
+        function toggleSearch() {
+            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
+            searchActive = !searchActive;
+            if (searchActive) { logo.style.display = 'none'; sb.style.display = 'block'; document.getElementById('searchInput').focus(); }
+            else { logo.style.display = 'flex'; sb.style.display = 'none'; document.getElementById('searchInput').value = ''; renderUI(); }
+        }
+        document.getElementById('searchInput').addEventListener('input', (e) => renderUI(e.target.value));
+
+        // ================= DAFTAR BERIKUTNYA =================
         function filterQueue(filterType, el) {
             document.querySelectorAll('.un-pill').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
-            
             const listContainer = document.getElementById('up-next-list');
             listContainer.innerHTML = '';
-            
             myPlaylist.forEach((song, i) => {
                 if (filterType === 'All' || song.artist.includes(filterType) || song.genre.includes(filterType)) {
                     const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
@@ -533,13 +655,11 @@
 
         function renderUpNextList() {
             filterQueue('All', document.querySelector('.un-pill.active') || document.querySelector('.un-pill'));
-            
-            // Tab Terkait (Random 10)
             const terkaitContainer = document.getElementById('terkait-list');
             terkaitContainer.innerHTML = '';
             let shuffled = [...originalPlaylist].sort(() => 0.5 - Math.random()).slice(0, 10);
             shuffled.forEach((song) => {
-                const realIndex = myPlaylist.findIndex(s => s.id === song.id);
+                const realIndex = myPlaylist.findIndex(s => s.id === song.id) > -1 ? myPlaylist.findIndex(s => s.id === song.id) : 0;
                 terkaitContainer.innerHTML += `
                     <div class="song-list-item" onclick="playSong(${realIndex}); closeBottomSheet();">
                         <img src="https://img.youtube.com/vi/${song.id}/hqdefault.jpg" onerror="this.src='https://via.placeholder.com/60'">
@@ -553,19 +673,11 @@
             });
         }
 
-        // ================= BOTTOM SHEET & GESTURE =================
+        // ================= BOTTOM SHEET & GESTURE (HANYA UNTUK TABS) =================
         function openTab(tabId, event) {
             const sheet = document.getElementById('bottom-sheet');
-            
-            // Kalau sheet belum kebuka, buka dulu
-            if (!sheet.classList.contains('expanded')) {
-                sheet.classList.add('expanded');
-            } else {
-                // Kalau klik tab yang sama pas lagi kebuka, maka tutup
-                if(event.currentTarget.classList.contains('active')) {
-                    closeBottomSheet(); return;
-                }
-            }
+            if (!sheet.classList.contains('expanded')) { sheet.classList.add('expanded'); } 
+            else if(event.currentTarget.classList.contains('active')) { closeBottomSheet(); return; }
 
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -575,26 +687,21 @@
 
         function closeBottomSheet() { 
             const sheet = document.getElementById('bottom-sheet');
-            sheet.style.transform = ''; 
-            sheet.classList.remove('expanded'); 
+            sheet.style.transform = ''; sheet.classList.remove('expanded'); 
         }
 
-        // GESTURE HANYA UNTUK BOTTOM SHEET (Sesuai Request!)
         const bottomSheet = document.getElementById('bottom-sheet');
         const sheetHeader = document.getElementById('sheet-header');
         let bsStartY = 0; let bsCurrentY = 0; let isBsDragging = false;
 
         sheetHeader.addEventListener('touchstart', (e) => {
-            bsStartY = e.touches[0].clientY;
-            isBsDragging = true;
-            bottomSheet.style.transition = 'none';
+            bsStartY = e.touches[0].clientY; isBsDragging = true; bottomSheet.style.transition = 'none';
         }, {passive: true});
 
         sheetHeader.addEventListener('touchmove', (e) => {
             if (!isBsDragging) return;
             bsCurrentY = e.touches[0].clientY;
             let diff = bsCurrentY - bsStartY;
-            // Hanya izinkan drag ke BAWAH
             if (diff > 0 && bottomSheet.classList.contains('expanded')) {
                 bottomSheet.style.transform = `translateY(${diff}px)`;
             }
@@ -605,18 +712,13 @@
             isBsDragging = false;
             bottomSheet.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
             let diff = bsCurrentY - bsStartY;
-            if (diff > 80) {
-                closeBottomSheet(); // Tutup kalau ditarik cukup jauh
-            } else {
-                bottomSheet.style.transform = 'translateY(0)'; // Balik ke atas (snap back)
-            }
+            if (diff > 80) closeBottomSheet(); else bottomSheet.style.transform = 'translateY(0)';
         });
 
-        // ================= YOUTUBE API =================
+        // ================= YOUTUBE API & PLAYER LOGIC =================
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        document.head.appendChild(tag);
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
@@ -626,14 +728,14 @@
             });
         }
 
-        function onPlayerReady() {
-            playerReady = true; setInterval(updateProgressBar, 500); 
-            renderUpNextList(); checkSaveStatus(); checkLikeStatus(myPlaylist[0].id);
-        }
+        function onPlayerReady() { playerReady = true; setInterval(updateProgressBar, 500); renderUpNextList(); checkLikeStatus(myPlaylist[0].id); generateFakeStats(0);}
+        function onPlayerError() { uiAction("Video diblokir. Auto-skip..."); setTimeout(nextSong, 1500); }
 
-        function onPlayerError() {
-            uiAction("Video diblokir label musik. Auto-skip berjalan...");
-            setTimeout(nextSong, 1500);
+        function playSongFromOriginal(originalIdx) {
+            const songToPlay = originalPlaylist[originalIdx];
+            currentIndex = myPlaylist.findIndex(s => s.id === songToPlay.id);
+            if (currentIndex === -1) { myPlaylist = [...originalPlaylist]; currentIndex = originalIdx; }
+            playSong(currentIndex);
         }
 
         function playSong(index) {
@@ -643,37 +745,29 @@
         }
 
         function nextSong() {
-            currentIndex = (currentIndex + 1) % myPlaylist.length;
+            if (isShuffle) {
+                let randomIdx = currentIndex;
+                while (randomIdx === currentIndex && myPlaylist.length > 1) { randomIdx = Math.floor(Math.random() * myPlaylist.length); }
+                currentIndex = randomIdx;
+            } else { currentIndex = (currentIndex + 1) % myPlaylist.length; }
             playSong(currentIndex);
         }
 
-        function prevSong() {
-            currentIndex = (currentIndex - 1 + myPlaylist.length) % myPlaylist.length;
-            playSong(currentIndex);
-        }
+        function prevSong() { currentIndex = (currentIndex - 1 + myPlaylist.length) % myPlaylist.length; playSong(currentIndex); }
+        function togglePlay() { if(!playerReady) return; player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo(); }
 
-        function togglePlay() {
-            if(!playerReady) return;
-            player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
-        }
-
-        // FUNGSI SHUFFLE ASLI (Mengacak Antrean)
         function toggleShuffle() {
             isShuffle = !isShuffle;
             const btn = document.getElementById('btn-shuffle');
-            
             if(isShuffle) {
                 btn.style.color = 'white';
-                // Acak sisa playlist selain lagu yang lagi diputar
                 let currentSong = myPlaylist[currentIndex];
                 let remainingSongs = myPlaylist.filter((_, i) => i !== currentIndex);
                 remainingSongs.sort(() => 0.5 - Math.random());
                 myPlaylist = [currentSong, ...remainingSongs];
-                currentIndex = 0; // Reset index ke 0 karena lagu saat ini ada di paling atas
-                uiAction('Acak diaktifkan');
+                currentIndex = 0; uiAction('Acak diaktifkan, antrean diubah');
             } else {
                 btn.style.color = 'var(--text-secondary)';
-                // Balikin ke urutan asli
                 let currentId = myPlaylist[currentIndex].id;
                 myPlaylist = [...originalPlaylist];
                 currentIndex = myPlaylist.findIndex(s => s.id === currentId);
@@ -690,15 +784,16 @@
             else if (repeatMode === 2) { btn.innerText = 'repeat_one'; btn.style.color = 'white'; uiAction('Ulangi lagu saat ini'); }
         }
 
+        function toggleMode(el) {
+            document.querySelectorAll('.fp-toggle-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active'); uiAction('Beralih ke mode ' + el.innerText);
+        }
+
         function onStateChange(e) {
-            const fpIcon = document.getElementById('fp-play-btn');
-            const mIcon = document.getElementById('m-play-btn');
-            
-            if(e.data === YT.PlayerState.PLAYING) {
-                fpIcon.innerText = 'pause'; mIcon.innerText = 'pause';
-            } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.UNSTARTED) {
-                fpIcon.innerText = 'play_arrow'; mIcon.innerText = 'play_arrow';
-            } else if(e.data === YT.PlayerState.ENDED) {
+            const fpIcon = document.getElementById('fp-play-btn'); const mIcon = document.getElementById('m-play-btn');
+            if(e.data === YT.PlayerState.PLAYING) { fpIcon.innerText = 'pause'; mIcon.innerText = 'pause'; } 
+            else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.UNSTARTED) { fpIcon.innerText = 'play_arrow'; mIcon.innerText = 'play_arrow'; } 
+            else if(e.data === YT.PlayerState.ENDED) {
                 if (repeatMode === 2) { player.seekTo(0); player.playVideo(); }
                 else if (repeatMode === 1 || currentIndex < myPlaylist.length - 1) { nextSong(); }
             }
@@ -713,11 +808,7 @@
             
             document.getElementById('fp-title').innerText = song.title; document.getElementById('fp-artist').innerText = song.artist;
             
-            const lyricsContainer = document.getElementById('lyrics-content');
-            lyricsContainer.innerHTML = `<span style="color: var(--text-secondary); font-size: 16px;">Lirik belum tersedia dari Musixmatch.</span>`;
-            
-            checkLikeStatus(song.id);
-            renderUpNextList();
+            checkLikeStatus(song.id); generateFakeStats(idx); renderUpNextList();
         }
 
         function formatTime(seconds) {
@@ -730,8 +821,7 @@
             if(!playerReady || !player.getCurrentTime) return;
             const cur = player.getCurrentTime(); const dur = player.getDuration();
             if(dur > 0) {
-                const perc = (cur / dur) * 100;
-                document.getElementById('p-fill').style.width = perc + '%';
+                document.getElementById('p-fill').style.width = ((cur / dur) * 100) + '%';
                 document.getElementById('t-current').innerText = formatTime(cur);
                 document.getElementById('t-total').innerText = formatTime(dur);
             }
@@ -744,15 +834,8 @@
             player.seekTo(pos * player.getDuration());
         }
 
-        function openPlayer() { 
-            const fp = document.getElementById('full-player');
-            fp.classList.add('active'); 
-        }
-        function closePlayer() { 
-            const fp = document.getElementById('full-player');
-            fp.classList.remove('active'); 
-            closeBottomSheet(); 
-        }
+        function openPlayer() { document.getElementById('full-player').classList.add('active'); }
+        function closePlayer() { document.getElementById('full-player').classList.remove('active'); closeBottomSheet(); }
     </script>
 </body>
 </html>
