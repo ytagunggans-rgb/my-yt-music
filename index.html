@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YT Music Clone - Ultimate Edition</title>
+    <title>SuperApp - YT Music & Spotify</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
@@ -14,35 +14,62 @@
             --text-primary: #ffffff;
             --text-secondary: #aaaaaa;
             --yt-red: #ff0000;
+            --sp-green: #1ed760;
+            --sp-bg: #121212;
+            --sp-surface: #181818;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent;}
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Roboto', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
-            background-color: var(--bg-base); color: var(--text-primary);
-            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            background-color: var(--bg-base); 
+            color: var(--text-primary);
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
             overscroll-behavior-y: none;
         }
 
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
-        .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined { 
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; 
+        }
+        .icon-filled { 
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; 
+        }
 
-        /* ================= VIEWS (HALAMAN NAVIGASI) ================= */
-        .page-view { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 140px; display: none; }
+        /* ================= VIEWS (HALAMAN) ================= */
+        .page-view { 
+            flex: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            padding-bottom: 140px; 
+            display: none; 
+        }
         .page-view.active { display: block; }
         
-        /* HEADER & SEARCH */
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; position: sticky; top: 0; background: rgba(3,3,3,0.95); z-index: 50; }
+        /* HEADER YT MUSIC */
+        .top-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 20px; position: sticky; top: 0; background: rgba(3,3,3,0.95); z-index: 50; 
+        }
         .logo-area { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .logo-area .material-symbols-outlined { color: var(--yt-red); font-size: 28px; }
         .logo-area span { font-size: 22px; font-weight: 700; letter-spacing: -1px; }
+        
+        .search-container { display: none; flex: 1; margin-left: 15px; margin-right: 15px; }
+        .search-container input { width: 100%; background: #333; border: none; color: white; padding: 8px 15px; border-radius: 20px; outline: none; }
+        
         .header-icons { display: flex; align-items: center; gap: 20px; color: var(--text-primary); cursor: pointer;}
         .header-icons img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
-        .search-container { display: none; flex: 1; margin-left: 15px; margin-right: 15px; }
-        .search-container input { width: 100%; background: #333; border: none; color: white; padding: 8px 15px; border-radius: 20px; outline: none; }
-
-        /* BERANDA ITEMS */
+        /* BERANDA KATEGORI */
         .category-pills { display: flex; gap: 10px; padding: 0 20px 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .category-pills::-webkit-scrollbar { display: none; }
         .pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;}
@@ -53,17 +80,49 @@
         .section-subtitle { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .section-title h2 { font-size: 24px; font-weight: 700; margin-top: 2px;}
         
+        /* GRID YT MUSIC */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; padding: 0 20px; }
         .card { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #222; cursor: pointer; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; align-items: flex-end; padding: 10px; }
         .card-title { font-size: 13px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
 
-        /* OTHER PAGES DUMMY CONTENT */
-        .dummy-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; color: var(--text-secondary); text-align: center; padding: 20px;}
-        .dummy-content .material-symbols-outlined { font-size: 80px; margin-bottom: 20px; opacity: 0.5; }
+        /* ================= UI SPOTIFY EKSPLORASI (Sesuai Screenshot lo) ================= */
+        .sp-layout { display: flex; height: 100%; background: #000; font-family: 'Roboto', sans-serif;}
+        .sp-sidebar { width: 320px; background: var(--sp-bg); border-radius: 8px; margin: 8px; padding: 15px; display: flex; flex-direction: column; overflow-y: auto;}
+        .sp-main { flex: 1; background: linear-gradient(180deg, #222222 0%, var(--sp-bg) 40%); border-radius: 8px; margin: 8px 8px 8px 0; overflow-y: auto; position: relative;}
+        
+        .sp-side-header { display: flex; align-items: center; gap: 10px; color: #a7a7a7; font-weight: 700; margin-bottom: 20px; cursor: pointer; transition: 0.2s;}
+        .sp-side-header:hover { color: white; }
+        .sp-liked-box { display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 8px; cursor: pointer;}
+        .sp-liked-box:hover { background: #1a1a1a; }
+        .sp-liked-img { width: 48px; height: 48px; background: linear-gradient(135deg, #450af5, #c4efd9); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        
+        .sp-topbar { position: sticky; top: 0; padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; background: rgba(18,18,18,0.9); z-index: 10;}
+        .sp-nav-btns { display: flex; gap: 10px; }
+        .sp-nav-btns div { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;}
+        
+        .sp-pills { display: flex; gap: 8px; margin-top: 15px; padding: 0 24px;}
+        .sp-pill { background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer;}
+        .sp-pill.active { background: white; color: black;}
 
-        /* ================= BOTTOM NAV ================= */
+        .sp-section { padding: 24px; }
+        .sp-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 16px;}
+        .sp-row { display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 20px;}
+        .sp-row::-webkit-scrollbar { display: none; }
+        
+        .sp-card { background: var(--sp-surface); padding: 16px; border-radius: 8px; min-width: 170px; max-width: 180px; cursor: pointer; transition: 0.3s; position: relative;}
+        .sp-card:hover { background: #282828; }
+        .sp-card img { width: 100%; aspect-ratio: 1; object-fit: cover; margin-bottom: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);}
+        .sp-card.radio img { border-radius: 8px; }
+        .sp-card.artist img { border-radius: 50%; }
+        
+        .sp-play-btn { position: absolute; bottom: 85px; right: 20px; width: 48px; height: 48px; background: var(--sp-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; box-shadow: 0 8px 8px rgba(0,0,0,0.3);}
+        .sp-card:hover .sp-play-btn { opacity: 1; transform: translateY(0);}
+        .sp-card-title { font-weight: 700; font-size: 15px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .sp-card-desc { font-size: 13px; color: #a7a7a7; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;}
+
+        /* ================= BOTTOM NAV UTAMA ================= */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--bg-surface); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: 5px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; gap: 4px; cursor: pointer; transition: color 0.2s; width: 20%;}
         .nav-item.active { color: var(--text-primary); }
@@ -78,19 +137,19 @@
         .mini-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mini-controls { display: flex; align-items: center; gap: 15px; padding-right: 5px; }
 
-        /* ================= FULL PLAYER VIEW ================= */
-        #full-player { position: fixed; inset: 0; background: var(--bg-base); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; }
-        #full-player.active { transform: translateY(0); }
+        /* ================= FULL PLAYER (1) - YT MUSIC ================= */
+        #ytm-full-player { position: fixed; inset: 0; background: var(--bg-base); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; }
+        #ytm-full-player.active { transform: translateY(0); }
         
         .fp-top-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 60px; }
-
         .fp-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .fp-toggle { background: #222; border-radius: 20px; display: flex; font-size: 13px; font-weight: 500; padding: 2px; }
         .fp-toggle-btn { padding: 6px 16px; border-radius: 16px; color: var(--text-secondary); cursor: pointer; }
         .fp-toggle-btn.active { background: #444; color: white; }
 
         .fp-video-container { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 20px; position: relative; flex-shrink: 0; }
-        #yt-player { width: 100%; height: 100%; pointer-events: none;}
+        /* Iframe Asli Sembunyi Di Sini */
+        #yt-iframe-container { width: 100%; height: 100%; pointer-events: none;}
 
         .fp-info-section { padding: 0 20px; flex-shrink: 0; }
         .fp-title { font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 5px; }
@@ -104,39 +163,56 @@
         .fp-progress-area { padding: 0 20px; flex-shrink: 0; }
         .progress-bar-container { width: 100%; height: 4px; background: #444; border-radius: 2px; position: relative; margin-bottom: 10px; cursor: pointer; }
         .progress-bar-fill { height: 100%; background: white; width: 0%; border-radius: 2px; position: relative; pointer-events: none;}
-        .progress-handle { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; right: -6px; top: -4px; pointer-events: none;}
-        .time-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); pointer-events: none;}
+        .progress-handle { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; right: -6px; top: -4px;}
+        .time-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);}
 
         .fp-main-controls { display: flex; justify-content: space-between; align-items: center; padding: 10px 30px 30px 30px; flex-shrink: 0; }
         .btn-control { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-play-pause { width: 64px; height: 64px; border-radius: 50%; background: white; color: black; }
         .btn-play-pause .material-symbols-outlined { font-size: 36px; font-variation-settings: 'FILL' 1; }
 
-        /* ================= BOTTOM SHEET (BERIKUTNYA/LIRIK/TERKAIT) ================= */
+        /* ================= FULL PLAYER (2) - KHUSUS SPOTIFY ================= */
+        #spotify-full-player { position: fixed; inset: 0; background: linear-gradient(180deg, #4b4b4b 0%, #121212 100%); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; font-family: 'Roboto', sans-serif;}
+        #spotify-full-player.active { transform: translateY(0); }
+        
+        .sp-fp-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        .sp-fp-header-title { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: white; text-transform: uppercase;}
+        
+        .sp-fp-art-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .sp-fp-art { width: 100%; max-width: 350px; aspect-ratio: 1; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+
+        .sp-fp-bottom { padding: 0 20px 30px 20px; }
+        .sp-fp-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;}
+        .sp-fp-title { font-size: 24px; font-weight: 700; color: white; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .sp-fp-artist { font-size: 16px; color: #b3b3b3; }
+
+        .sp-fp-progress-area { margin-bottom: 20px; }
+        .sp-progress-bar-container { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; position: relative; cursor: pointer; }
+        .sp-progress-bar-fill { height: 100%; background: white; width: 0%; border-radius: 2px; }
+        .sp-time-info { display: flex; justify-content: space-between; font-size: 11px; color: #b3b3b3; margin-top: 8px;}
+
+        .sp-fp-controls { display: flex; justify-content: space-between; align-items: center; }
+        .sp-btn-play { width: 64px; height: 64px; border-radius: 50%; background: var(--sp-green); color: black; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .sp-btn-play .material-symbols-outlined { font-size: 36px; font-variation-settings: 'FILL' 1; }
+
+        /* ================= BOTTOM SHEET (YT MUSIC) ================= */
         .bottom-sheet { position: absolute; bottom: 0; left: 0; right: 0; height: 75vh; background: var(--bg-surface); border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 50px)); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 -10px 30px rgba(0,0,0,0.7); z-index: 2100; }
         .bottom-sheet.expanded { transform: translateY(0); }
-        
         .fp-bottom-tabs { display: flex; justify-content: space-around; font-size: 14px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; height: 50px; cursor: pointer; user-select: none; touch-action: none;}
         .fp-bottom-tabs::before { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; }
         .tab { flex: 1; text-align: center; padding: 15px 0; position: relative; }
         .tab.active { color: white; }
         .tab.active::after { content: ''; position: absolute; bottom: 0; left: 15%; right: 15%; height: 2px; background: white; border-radius: 2px 2px 0 0; }
-
         .tab-content-container { flex: 1; overflow-y: auto; padding-bottom: 20px;}
         .tab-pane { display: none; flex-direction: column; padding-bottom: 30px; }
         .tab-pane.active { display: flex; }
-
+        
         .up-next-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .un-info { display: flex; flex-direction: column; gap: 4px; }
         .un-subtitle { font-size: 12px; color: var(--text-secondary); }
         .un-title { font-size: 14px; font-weight: bold; }
         .un-save-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; cursor: pointer; }
-
-        .un-filters { display: flex; gap: 10px; padding: 0 20px 15px 20px; overflow-x: auto; scrollbar-width: none; }
-        .un-filters::-webkit-scrollbar { display: none; }
-        .un-pill { background: rgba(255,255,255,0.1); border: 1px solid transparent; padding: 6px 16px; border-radius: 16px; font-size: 13px; color: white; white-space: nowrap; cursor: pointer; }
-        .un-pill.active { background: white; color: black; font-weight: 500; }
-
+        
         .song-list-item { display: flex; align-items: center; padding: 10px 20px; gap: 15px; cursor: pointer; transition: 0.2s;}
         .song-list-item:hover { background: rgba(255,255,255,0.05); }
         .song-list-item img { width: 56px; height: 40px; border-radius: 4px; object-fit: cover; }
@@ -144,35 +220,30 @@
         .song-list-title { font-size: 14px; font-weight: 500; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .song-list-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
 
-        .lyrics-box { padding: 30px 20px; font-size: 20px; line-height: 1.6; font-weight: 700; color: white; white-space: pre-wrap; }
-        .mxm-credit { display: flex; align-items: center; gap: 8px; padding: 0 20px 20px 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
-        .mxm-credit img { width: 16px; height: 16px; opacity: 0.7; }
-
-        /* ================= MODALS (POP-UPS) ================= */
+        /* ================= MODALS ================= */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; display: none; flex-direction: column; justify-content: flex-end; }
         .modal-content { background: var(--bg-surface); padding: 20px; border-radius: 20px 20px 0 0; animation: slideUp 0.3s; max-height: 80vh; display: flex; flex-direction: column; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
         .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
         .modal-body { overflow-y: auto; flex: 1; }
-        
-        /* Modal Komentar */
         .comment-item { display: flex; gap: 12px; margin-bottom: 15px; }
         .comment-item img { width: 36px; height: 36px; border-radius: 50%; }
         .comment-text { font-size: 14px; }
         .comment-author { font-weight: bold; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;}
         .comment-input-area { display: flex; gap: 10px; margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);}
         .comment-input-area input { flex: 1; background: transparent; border: none; border-bottom: 1px solid white; color: white; outline: none; }
-        
-        /* Modal Menu 3 Titik & Playlist */
         .menu-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; cursor: pointer; font-size: 15px; }
         .menu-item .material-symbols-outlined { color: var(--text-secondary); }
-        
-        /* Modal Equalizer */
         .eq-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .eq-slider { flex: 1; margin: 0 15px; accent-color: white; }
 
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; z-index: 9999; display: none; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sp-sidebar { display: none; }
+            .sp-main { margin: 0; border-radius: 0; }
+        }
     </style>
 </head>
 <body>
@@ -186,12 +257,12 @@
                 <span>Music</span>
             </div>
             <div class="search-container" id="search-box">
-                <input type="text" id="searchInput" placeholder="Cari lagu di YouTube... lalu tekan Enter">
+                <input type="text" id="searchInput" placeholder="Cari lagu di YouTube... tekan Enter">
             </div>
             <div class="header-icons">
                 <span class="material-symbols-outlined" onclick="uiAction('Mencari perangkat TV...')">cast</span>
                 <span class="material-symbols-outlined" id="search-icon" onclick="toggleSearch()">search</span>
-                <img src="https://i.pravatar.cc/100?u=putihbiru" alt="Profile" onclick="uiAction('Menu Profil')">
+                <img src="https://i.pravatar.cc/100?u=putihbiru" alt="Profile" onclick="uiAction('Menu Profil Agung')">
             </div>
         </div>
 
@@ -213,54 +284,69 @@
         <div class="grid-container" id="grid-home"></div>
     </div>
 
-    <div id="view-Sampel" class="page-view">
-        <div class="dummy-content">
-            <span class="material-symbols-outlined">play_circle</span>
-            <h2>Sampel Musik</h2>
-            <p>Geser ke atas untuk menemukan musik baru secara instan.</p>
-        </div>
-    </div>
-    <div id="view-Eksplorasi" class="page-view">
-        <div class="top-header" style="background: rgba(18, 18, 18, 0.95);">
-            <div class="logo-area" style="cursor: default;">
-                <span class="material-symbols-outlined" style="color: #1DB954; font-size: 28px; font-variation-settings: 'FILL' 1;">graphic_eq</span>
-                <span style="font-weight: 700; font-size: 22px; letter-spacing: -1px; color: #1DB954;">Spotify Zone</span>
+    <div id="view-Spotify" class="page-view" style="padding-bottom: 65px;">
+        <div class="sp-layout">
+            <div class="sp-sidebar">
+                <div class="sp-side-header">
+                    <span class="material-symbols-outlined icon-filled">library_music</span> Your Library
+                </div>
+                <div class="sp-liked-box">
+                    <div class="sp-liked-img">
+                        <span class="material-symbols-outlined icon-filled" style="color:white;">favorite</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 15px; color: white;">Liked Songs</div>
+                        <div style="font-size: 13px; color: #a7a7a7;">Playlist • 4 songs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sp-main">
+                <div class="sp-topbar">
+                    <div class="sp-nav-btns">
+                        <div><span class="material-symbols-outlined" style="color:white; font-size: 20px;">chevron_left</span></div>
+                        <div><span class="material-symbols-outlined" style="color:white; font-size: 20px;">chevron_right</span></div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 700; background: white; color: black; padding: 6px 16px; border-radius: 20px; cursor: pointer;">Explore Premium</span>
+                        <img src="https://i.pravatar.cc/100?u=putihbiru" style="width: 32px; height: 32px; border-radius: 50%;">
+                    </div>
+                </div>
+
+                <div class="sp-pills">
+                    <div class="sp-pill active">All</div>
+                    <div class="sp-pill">Music</div>
+                    <div class="sp-pill">Podcasts</div>
+                </div>
+
+                <div id="spotify-render-area"></div>
             </div>
         </div>
-        
-        <div style="padding: 20px; display: flex; flex-direction: column; gap: 25px; padding-bottom: 100px;">
-            <div>
-                <h2 style="font-size: 22px; margin-bottom: 5px;">Playlist Pilihan</h2>
-                <p style="color: var(--text-secondary); font-size: 13px;">Login akun Spotify di browser untuk dengerin full version.</p>
-            </div>
-            
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/playlist/0Lm8iFdhIpg1iQpInDAIaE?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4xUOwfZNuVCq?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/artist/1O4yyjVsY0VUpGMZiK7zNB?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/playlist/0Lm8iFdhIpg1iQpInDAIaE?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4tOS1lg4Kdgo?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/artist/20zafXaLhm5IcXnSU93rNn?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-            <iframe data-testid="embed-iframe" style="border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" src="https://open.spotify.com/embed/artist/7Gy1PxqrgsiqWF6JNYPHeB?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
     </div>
+
     <div id="view-Koleksi" class="page-view">
-        <div class="dummy-content">
-            <span class="material-symbols-outlined">library_music</span>
-            <h2>Koleksi Kamu</h2>
-            <p>Daftar playlist dan lagu yang disukai ada di sini.</p>
-        </div>
+        <div class="dummy-content"><span class="material-symbols-outlined">library_music</span><h2>Koleksi Kamu</h2></div>
+    </div>
+    <div id="view-Sampel" class="page-view">
+        <div class="dummy-content"><span class="material-symbols-outlined">play_circle</span><h2>Sampel Musik</h2></div>
     </div>
     <div id="view-Upgrade" class="page-view">
-        <div class="dummy-content">
-            <span class="material-symbols-outlined">workspace_premium</span>
-            <h2>Dapatkan Premium</h2>
-            <p>Dengarkan musik tanpa iklan dan putar di latar belakang.</p>
+        <div class="dummy-content"><span class="material-symbols-outlined">workspace_premium</span><h2>Dapatkan Premium</h2></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="navTo(this, 'Beranda')">
+            <span class="material-symbols-outlined icon-filled">home</span>Beranda
+        </div>
+        <div class="nav-item" onclick="navTo(this, 'Sampel')">
+            <span class="material-symbols-outlined">play_circle</span>Sampel
+        </div>
+        <div class="nav-item" onclick="navTo(this, 'Spotify')">
+            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_White.png" style="width: 24px; filter: invert(53%) sepia(82%) saturate(399%) hue-rotate(85deg) brightness(97%) contrast(88%);">
+            Spotify
+        </div>
+        <div class="nav-item" onclick="navTo(this, 'Koleksi')">
+            <span class="material-symbols-outlined">library_music</span>Koleksi
         </div>
     </div>
 
@@ -276,25 +362,13 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="navTo(this, 'Beranda')"><span class="material-symbols-outlined icon-filled">home</span>Beranda</div>
-        <div class="nav-item" onclick="navTo(this, 'Sampel')"><span class="material-symbols-outlined">play_circle</span>Sampel</div>
-        
-        <div class="nav-item" onclick="navTo(this, 'Eksplorasi')">
-            <span class="material-symbols-outlined" style="color: #1DB954; font-variation-settings: 'FILL' 1;">graphic_eq</span>Spotify
-        </div>
-        
-        <div class="nav-item" onclick="navTo(this, 'Koleksi')"><span class="material-symbols-outlined">library_music</span>Koleksi</div>
-        <div class="nav-item" onclick="navTo(this, 'Upgrade')"><span class="material-symbols-outlined">workspace_premium</span>Upgrade</div>
-    </div>
-
-    <div id="full-player">
-        <div class="fp-top-content" id="fp-top-content">
+    <div id="ytm-full-player">
+        <div class="fp-top-content" id="ytm-top-content">
             <div class="fp-header">
                 <span class="material-symbols-outlined" onclick="closePlayer()" style="font-size: 30px; cursor: pointer;">expand_more</span>
                 <div class="fp-toggle">
-                    <div class="fp-toggle-btn active" onclick="toggleMode(this)">Lagu</div>
-                    <div class="fp-toggle-btn" onclick="toggleMode(this)">Video</div>
+                    <div class="fp-toggle-btn active">Lagu</div>
+                    <div class="fp-toggle-btn">Video</div>
                 </div>
                 <span class="material-symbols-outlined" style="cursor: pointer;" onclick="openModal('menu-modal')">more_vert</span>
             </div>
@@ -304,35 +378,55 @@
             </div>
 
             <div class="fp-info-section">
-                <div class="fp-title" id="fp-title">Judul Lagu</div>
-                <div class="fp-artist" id="fp-artist">Nama Artis</div>
+                <div class="fp-title" id="ytm-title">Judul Lagu</div>
+                <div class="fp-artist" id="ytm-artist">Nama Artis</div>
             </div>
 
             <div class="fp-actions">
-                <div class="action-pill" id="btn-like" onclick="toggleLike()"><span class="material-symbols-outlined" id="icon-like">thumb_up</span> <span id="like-val">1,2 rb</span></div>
-                <div class="action-pill" onclick="btnDislike(this)"><span class="material-symbols-outlined">thumb_down</span></div>
-                <div class="action-pill" onclick="openModal('comment-modal')"><span class="material-symbols-outlined">chat</span> <span id="comment-val">120</span></div>
-                <div class="action-pill" onclick="openModal('save-modal')"><span class="material-symbols-outlined" id="save-icon">library_add</span> <span id="save-txt">Simpan</span></div>
+                <div class="action-pill" id="btn-like" onclick="toggleLike()">
+                    <span class="material-symbols-outlined" id="icon-like">thumb_up</span> 
+                    <span id="like-val">1,2 rb</span>
+                </div>
+                <div class="action-pill" onclick="uiAction('Dislike anonim terkirim')">
+                    <span class="material-symbols-outlined">thumb_down</span>
+                </div>
+                <div class="action-pill" onclick="openModal('comment-modal')">
+                    <span class="material-symbols-outlined">chat</span> 
+                    <span id="comment-val">120</span>
+                </div>
+                <div class="action-pill" onclick="openModal('save-modal')">
+                    <span class="material-symbols-outlined">library_add</span> Simpan
+                </div>
             </div>
 
             <div class="fp-progress-area">
-                <div class="progress-bar-container" id="p-container" onclick="seek(event); event.stopPropagation();">
-                    <div class="progress-bar-fill" id="p-fill">
+                <div class="progress-bar-container" id="ytm-p-container" onclick="seek(event, 'ytm'); event.stopPropagation();">
+                    <div class="progress-bar-fill" id="ytm-p-fill">
                         <div class="progress-handle"></div>
                     </div>
                 </div>
                 <div class="time-info">
-                    <span id="t-current">0:00</span>
-                    <span id="t-total">0:00</span>
+                    <span id="ytm-t-current">0:00</span>
+                    <span id="ytm-t-total">0:00</span>
                 </div>
             </div>
 
             <div class="fp-main-controls">
-                <button class="btn-control" onclick="toggleShuffle(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-shuffle" style="font-size:28px; color: var(--text-secondary);">shuffle</span></button>
-                <button class="btn-control" onclick="prevSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span></button>
-                <button class="btn-control btn-play-pause" onclick="togglePlay(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" id="fp-play-btn">play_arrow</span></button>
-                <button class="btn-control" onclick="nextSong(); event.stopPropagation();"><span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span></button>
-                <button class="btn-control" onclick="toggleRepeat(); event.stopPropagation();"><span class="material-symbols-outlined" id="btn-repeat" style="font-size:28px; color: var(--text-secondary);">repeat</span></button>
+                <button class="btn-control" onclick="toggleShuffle(); event.stopPropagation();">
+                    <span class="material-symbols-outlined" id="ytm-btn-shuffle" style="font-size:28px; color: var(--text-secondary);">shuffle</span>
+                </button>
+                <button class="btn-control" onclick="prevSong(); event.stopPropagation();">
+                    <span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_previous</span>
+                </button>
+                <button class="btn-control btn-play-pause" onclick="togglePlay(); event.stopPropagation();">
+                    <span class="material-symbols-outlined icon-filled" id="ytm-play-btn">play_arrow</span>
+                </button>
+                <button class="btn-control" onclick="nextSong(); event.stopPropagation();">
+                    <span class="material-symbols-outlined icon-filled" style="font-size:36px;">skip_next</span>
+                </button>
+                <button class="btn-control" onclick="toggleRepeat(); event.stopPropagation();">
+                    <span class="material-symbols-outlined" id="ytm-btn-repeat" style="font-size:28px; color: var(--text-secondary);">repeat</span>
+                </button>
             </div>
         </div>
 
@@ -342,42 +436,70 @@
                 <div class="tab" onclick="openTab('lirik', this)">LIRIK</div>
                 <div class="tab" onclick="openTab('terkait', this)">TERKAIT</div>
             </div>
-
             <div class="tab-content-container" id="sheet-content">
                 <div id="tab-berikutnya" class="tab-pane active">
                     <div class="up-next-header">
                         <div class="un-info">
                             <span class="un-subtitle">Diputar dari</span>
-                            <span class="un-title" id="un-head-title">Playlist Putih Biru</span>
+                            <span class="un-title" id="un-head-title">Playlist Musik</span>
                         </div>
-                        <button class="un-save-btn" onclick="openModal('save-modal')">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">playlist_add</span> Simpan
-                        </button>
-                    </div>
-                    <div class="un-filters">
-                        <div class="un-pill active" onclick="filterQueue('All', this)">All</div>
-                        <div class="un-pill" onclick="filterQueue('Populer', this)">Populer</div>
-                        <div class="un-pill" onclick="filterQueue('Cita Citata', this)">Cita Citata</div>
-                        <div class="un-pill" onclick="filterQueue('Juicy Luicy', this)">Juicy Luicy</div>
                     </div>
                     <div id="up-next-list"></div>
                 </div>
-
                 <div id="tab-lirik" class="tab-pane">
-                    <div class="lyrics-box" id="lyrics-content">Memuat lirik...</div>
-                    <div class="mxm-credit">
-                        <span class="material-symbols-outlined">music_note</span>
-                        Lirik didukung oleh Musixmatch
-                    </div>
+                    <div class="lyrics-box">Memuat lirik dari Musixmatch...</div>
                 </div>
-
                 <div id="tab-terkait" class="tab-pane">
-                    <div style="padding: 15px 20px; font-weight: bold; font-size: 14px;">Disarankan untuk kamu</div>
                     <div id="terkait-list"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="spotify-full-player">
+        <div class="sp-fp-header">
+            <span class="material-symbols-outlined" onclick="closePlayer()" style="color: white; cursor: pointer; font-size: 28px;">expand_more</span>
+            <div class="sp-fp-header-title">PLAYING FROM PLAYLIST</div>
+            <span class="material-symbols-outlined" style="color: white; cursor: pointer;" onclick="openModal('menu-modal')">more_vert</span>
+        </div>
+
+        <div class="sp-fp-art-container">
+            <img src="https://via.placeholder.com/350" id="sp-art" class="sp-fp-art">
+        </div>
+
+        <div class="sp-fp-bottom">
+            <div class="sp-fp-info">
+                <div style="overflow: hidden;">
+                    <div class="sp-fp-title" id="sp-title">Judul Lagu Spotify</div>
+                    <div class="sp-fp-artist" id="sp-artist">Artis Spotify</div>
+                </div>
+                <span class="material-symbols-outlined icon-filled" id="sp-btn-like" onclick="toggleLike()" style="color: var(--text-secondary); font-size: 28px; cursor: pointer;">favorite</span>
+            </div>
+
+            <div class="sp-fp-progress-area">
+                <div class="sp-progress-bar-container" id="sp-p-container" onclick="seek(event, 'sp');">
+                    <div class="sp-progress-bar-fill" id="sp-p-fill"></div>
+                </div>
+                <div class="sp-time-info">
+                    <span id="sp-t-current">0:00</span>
+                    <span id="sp-t-total">0:00</span>
+                </div>
+            </div>
+
+            <div class="sp-fp-controls">
+                <span class="material-symbols-outlined" id="sp-btn-shuffle" onclick="toggleShuffle()" style="color: #b3b3b3; font-size: 24px; cursor: pointer;">shuffle</span>
+                <span class="material-symbols-outlined icon-filled" onclick="prevSong()" style="color: white; font-size: 36px; cursor: pointer;">skip_previous</span>
+                
+                <div class="sp-btn-play" onclick="togglePlay()">
+                    <span class="material-symbols-outlined icon-filled" id="sp-play-btn" style="color: black;">play_arrow</span>
+                </div>
+                
+                <span class="material-symbols-outlined icon-filled" onclick="nextSong()" style="color: white; font-size: 36px; cursor: pointer;">skip_next</span>
+                <span class="material-symbols-outlined" id="sp-btn-repeat" onclick="toggleRepeat()" style="color: #b3b3b3; font-size: 24px; cursor: pointer;">repeat</span>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal-overlay" id="comment-modal" onclick="closeModal('comment-modal')">
         <div class="modal-content" onclick="event.stopPropagation()" style="height: 60vh;">
@@ -387,15 +509,20 @@
             <div class="modal-body" id="comment-list">
                 <div class="comment-item">
                     <img src="https://i.pravatar.cc/100?img=1">
-                    <div><div class="comment-author">Zayyin Alhamidy</div><div class="comment-text">Gila lagunya asik banget buat nugas! 🔥</div></div>
+                    <div>
+                        <div class="comment-author">Zayyin Alhamidy</div>
+                        <div class="comment-text">Gila lagunya asik banget buat nugas! 🔥</div>
+                    </div>
                 </div>
                 <div class="comment-item">
                     <img src="https://i.pravatar.cc/100?img=2">
-                    <div><div class="comment-author">Novia Elsandy</div><div class="comment-text">Visual videonya juga keren sih. Nostalgia.</div></div>
+                    <div>
+                        <div class="comment-author">Novia Elsandy</div>
+                        <div class="comment-text">Visual videonya juga keren sih. Nostalgia.</div>
+                    </div>
                 </div>
             </div>
             <div class="comment-input-area">
-                <img src="https://i.pravatar.cc/100?u=putihbiru" style="width: 30px; height: 30px; border-radius: 50%;">
                 <input type="text" id="komentar-input" placeholder="Tambahkan komentar...">
                 <span class="material-symbols-outlined" style="color:var(--yt-red); cursor:pointer;" onclick="tambahKomentar()">send</span>
             </div>
@@ -404,25 +531,29 @@
 
     <div class="modal-overlay" id="save-modal" onclick="closeModal('save-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-header">Simpan video ke... <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('save-modal')">close</span></div>
+            <div class="modal-header">
+                Simpan ke Playlist <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('save-modal')">close</span>
+            </div>
             <div class="modal-body">
-                <div class="menu-item" onclick="togglePlaylistSave('Favorit', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Favorit</div>
-                <div class="menu-item" onclick="togglePlaylistSave('Putih Biru (Lokal)', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Putih Biru (Lokal)</div>
-                <div class="menu-item" onclick="togglePlaylistSave('Santai Sore', this)"><span class="material-symbols-outlined">check_box_outline_blank</span> Santai Sore</div>
-                <div class="menu-item" style="color: var(--yt-red);"><span class="material-symbols-outlined" style="color: var(--yt-red);">add</span> Playlist Baru</div>
+                <div class="menu-item">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span> Favorit
+                </div>
+                <div class="menu-item">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span> Putih Biru (Lokal)
+                </div>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="menu-modal" onclick="closeModal('menu-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-header" style="border:none; padding-bottom: 0;">Opsi Lagu</div>
             <div class="modal-body">
-                <div class="menu-item" onclick="openModal('eq-modal'); document.getElementById('menu-modal').style.display='none';"><span class="material-symbols-outlined">tune</span> Setel Audio (Equalizer)</div>
-                <div class="menu-item" onclick="uiAction('Memulai radio berdasarkan lagu ini...')"><span class="material-symbols-outlined">sensors</span> Mulai Radio</div>
-                <div class="menu-item" onclick="uiAction('Menambahkan ke antrean berikutnya')"><span class="material-symbols-outlined">queue_music</span> Putar berikutnya</div>
-                <div class="menu-item" onclick="uiAction('Hanya tersedia untuk akun Premium')"><span class="material-symbols-outlined">download</span> Download</div>
-                <div class="menu-item" onclick="uiAction('Tautan disalin ke papan klip')"><span class="material-symbols-outlined">share</span> Bagikan</div>
+                <div class="menu-item" onclick="openModal('eq-modal'); document.getElementById('menu-modal').style.display='none';">
+                    <span class="material-symbols-outlined">tune</span> Equalizer Audio
+                </div>
+                <div class="menu-item" onclick="uiAction('Link disalin!')">
+                    <span class="material-symbols-outlined">share</span> Bagikan
+                </div>
             </div>
         </div>
     </div>
@@ -430,30 +561,38 @@
     <div class="modal-overlay" id="eq-modal" onclick="closeModal('eq-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
-                Audio Equalizer <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('eq-modal')">close</span>
+                Equalizer (Headset) <span class="material-symbols-outlined" style="cursor:pointer;" onclick="closeModal('eq-modal')">close</span>
             </div>
-            <div style="font-size: 12px; color: var(--yt-red); margin-bottom: 15px;">*Fitur ini hanya simulasi visual antarmuka pengaturan frekuensi untuk Headset.</div>
             <div class="modal-body">
-                <div class="eq-row"><span>Bass</span> <input type="range" class="eq-slider" min="0" max="100" value="70"> <span>High</span></div>
-                <div class="eq-row"><span>Mid</span> <input type="range" class="eq-slider" min="0" max="100" value="50"> <span>High</span></div>
-                <div class="eq-row"><span>Treble</span> <input type="range" class="eq-slider" min="0" max="100" value="60"> <span>High</span></div>
-                <div class="menu-item" style="justify-content: center; background: #333; border-radius: 8px; margin-top: 10px;" onclick="uiAction('Preset Headset Bass Boost Aktif')">Gunakan Preset Headset</div>
+                <div class="eq-row">
+                    <span>Bass</span> 
+                    <input type="range" class="eq-slider" value="70"> 
+                    <span>High</span>
+                </div>
+                <div class="eq-row">
+                    <span>Treble</span> 
+                    <input type="range" class="eq-slider" value="60"> 
+                    <span>High</span>
+                </div>
+                <div class="menu-item" style="justify-content: center; background: #333; border-radius: 8px; margin-top: 10px;" onclick="uiAction('Preset Bass Boost Aktif')">
+                    Gunakan Preset Headset
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // API KEY GOOGLE LO (Rahasia!)
         const API_KEY = "AIzaSyB4Zg7GLOj_xlIgZ-V-s3G5cCq7CBj7EH4";
 
+        // ================= FULL 73 LAGU ASLI AGUNG =================
         const originalPlaylist = [
-            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.52", genre: "Koplo" },
-            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main!", artist: "antinrml", genre: "Senang" },
-            { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU", artist: "antinrml", genre: "Pop" },
-            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla & Yung Caters", genre: "Senang" },
+            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman", artist: "Rombongan Bodonk Koplo", genre: "Koplo" },
+            { id: "IrdruPzbWLM", title: "Cuma Temen + main-main!", artist: "antinrml", genre: "Senang" },
+            { id: "LMIS2PMqCL0", title: "MALU MALU", artist: "antinrml", genre: "Populer" },
+            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla", genre: "Senang" },
             { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza", genre: "Pop" },
             { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO & Tenxi", genre: "Bersantai" },
-            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN", artist: "Starky Aji", genre: "Populer" },
+            { id: "VKP1t3gQ_o0", title: "KEONG RACUN", artist: "Starky Aji", genre: "Koplo" },
             { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay", genre: "Senang" },
             { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi & RYO", genre: "Bersantai" },
             { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi & Jemsii", genre: "Koplo" },
@@ -463,33 +602,33 @@
             { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla", genre: "Pop" },
             { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi & RYO", genre: "Senang" },
             { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah", genre: "Bersantai" },
-            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah", genre: "Pop" },
+            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah", genre: "Populer" },
             { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah", genre: "Bersantai" },
             { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU", artist: "Maikaldo Sihotang", genre: "Koplo" },
             { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata", genre: "Koplo" },
             { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata", genre: "Koplo" },
             { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata", genre: "Koplo" },
             { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO", genre: "Senang" },
-            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO", genre: "Pop" },
+            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO", genre: "Populer" },
             { id: "heukr71gj9I", title: "main-main!", artist: "RYO & Josua", genre: "Pop" },
             { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi & suisei", genre: "Bersantai" },
             { id: "En-EHqRk8yg", title: "Garam & Madu", artist: "Tenxi", genre: "Bersantai" },
-            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi & Jemsii", genre: "Pop" },
+            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi & Jemsii", genre: "Populer" },
             { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi", genre: "Senang" },
             { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk", genre: "Koplo" },
-            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian", genre: "Pop" },
+            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian", genre: "Populer" },
             { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia & Tenxi", genre: "Senang" },
-            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel", genre: "Bersantai" },
+            { id: "sTSGgtpHRvo", title: "Masa Lalu", artist: "Chaeroel", genre: "Bersantai" },
             { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah", genre: "Bersantai" },
             { id: "Z1FyY4sM7ok", title: "Kasih Aba Aba", artist: "Naykilla & Tenxi", genre: "Senang" },
-            { id: "CCw8K2Sskkk", title: "Semua Aku Dirayakan", artist: "Nadin Amizah", genre: "Pop" },
+            { id: "CCw8K2Sskkk", title: "Semua Aku Dirayakan", artist: "Nadin Amizah", genre: "Populer" },
             { id: "6bwJ6Wjt-VQ", title: "Bintang 5", artist: "Tenxi & Jemsii", genre: "Pop" },
             { id: "K-OYnG7j9Ys", title: "JAMET", artist: "dia", genre: "Senang" },
             { id: "BM5OiWNtWNQ", title: "Kasih Tau Mama", artist: "Rombongan Bodonk", genre: "Koplo" },
             { id: "bHwhI85mQ9M", title: "attached", artist: "Tenxi", genre: "Bersantai" },
             { id: "qnbwUiSudIk", title: "Berubah", artist: "Tenxi", genre: "Pop" },
             { id: "st3Oo1Zf7x0", title: "Goyang Dumang", artist: "Cita Citata", genre: "Koplo" },
-            { id: "lQ3ktPaXwWY", title: "Orang Baru Lebe Gacor", artist: "Ecko Show", genre: "Pop" },
+            { id: "lQ3ktPaXwWY", title: "Orang Baru Lebe Gacor", artist: "Ecko Show", genre: "Populer" },
             { id: "O9aBf7J00Zc", title: "Jangan Buru-Buru", artist: "RYO", genre: "Bersantai" },
             { id: "TjJuxZQlPH0", title: "Aku Mah Apa Atuh", artist: "Cita Citata", genre: "Koplo" },
             { id: "Xh93FL06JwQ", title: "Bertaut", artist: "Nadin Amizah", genre: "Bersantai" },
@@ -497,16 +636,16 @@
             { id: "R7mX714_QZs", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah", genre: "Bersantai" },
             { id: "zhawF9_lpM0", title: "Runtuh", artist: "Feby Putri", genre: "Bersantai" },
             { id: "gB8n3ZIWcUk", title: "EEEE A", artist: "dia", genre: "Senang" },
-            { id: "MODbh7nKWmQ", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf", genre: "Pop" },
-            { id: "xnALK28rQ1w", title: "Bunga Maaf", artist: "The Lantis", genre: "Pop" },
+            { id: "MODbh7nKWmQ", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf", genre: "Populer" },
+            { id: "xnALK28rQ1w", title: "Bunga Maaf", artist: "The Lantis", genre: "Populer" },
             { id: "60gOh6eCrkw", title: "Terbuang Dalam Waktu", artist: "Barasuara", genre: "Pop" },
             { id: "SVzHmRZZNrE", title: "Lantas", artist: "Juicy Luicy", genre: "Populer" },
             { id: "QJkJILUQ0mM", title: "Ayam Den Lapeh", artist: "Lagu Minang", genre: "Pop" },
-            { id: "1Sbp-0WwYpA", title: "Keong Racun Fersi BaLI", artist: "benvoer", genre: "Koplo" },
+            { id: "1Sbp-0WwYpA", title: "Keong Racun Bali", artist: "benvoer", genre: "Koplo" },
             { id: "_IxACCqUhK0", title: "DJ CALON MANTU IDAMAN", artist: "Sarip Remix", genre: "Koplo" },
             { id: "LLZS82p8drk", title: "No Comment", artist: "Tuty Wibowo", genre: "Koplo" },
-            { id: "peo7ICI4ABk", title: "Kacamata (Live)", artist: "Afgan", genre: "Pop" },
-            { id: "IwzkfMmNMpM", title: "Dreamers", artist: "Jung Kook", genre: "Pop" },
+            { id: "peo7ICI4ABk", title: "Kacamata (Live)", artist: "Afgan", genre: "Populer" },
+            { id: "IwzkfMmNMpM", title: "Dreamers", artist: "Jung Kook", genre: "Populer" },
             { id: "3HSYwQFosjQ", title: "Selalu Ada di Nadimu", artist: "Prince Poetiray", genre: "Pop" },
             { id: "YSIS560SMGE", title: "Kasih Putih", artist: "Yovie Widianto", genre: "Bersantai" },
             { id: "X9EDqDWza3M", title: "Sialan", artist: "Juicy Luicy", genre: "Populer" },
@@ -519,358 +658,247 @@
             { id: "9TuWiwkBGis", title: "Terlalu Tinggi", artist: "Juicy Luicy", genre: "Populer" },
             { id: "0wDZIAJQ_yY", title: "Mawar Jingga", artist: "Juicy Luicy", genre: "Populer" },
             { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy", genre: "Populer" }
-        ]; 
+        ];
+
+        // ================= ILMU HITAM: DATA SPOTIFY ZONE =================
+        const dataSpotify = [
+            {
+                sectionTitle: "Popular radio",
+                items: [
+                    { title: "Hindia", desc: "With .Feast, Nadin Amizah...", img: "https://i.scdn.co/image/ab6761610000e5ebb5b8dcbff9bd424b7a13bd78", type: "radio", q: "Hindia popular tracks" },
+                    { title: "Bruno Mars", desc: "With Ed Sheeran, Katy Perry...", img: "https://i.scdn.co/image/ab6761610000e5ebc36dd9eb55fb0ce4e65058cd", type: "radio", q: "Bruno Mars best songs" },
+                    { title: "Sheila On 7", desc: "With Tulus, Pamungkas...", img: "https://i.scdn.co/image/ab6761610000e5eb66dd1d06b52a16dcf42f0d9b", type: "radio", q: "Sheila On 7 full album" },
+                    { title: "Bernadya", desc: "With Nadin Amizah, Juicy Luicy...", img: "https://i.scdn.co/image/ab6761610000e5ebd74f1b40280ebdbd8bda7b2f", type: "radio", q: "Bernadya lagu" },
+                    { title: "Dewa 19", desc: "With Dewa, Pamungkas...", img: "https://i.scdn.co/image/ab6761610000e5eb74f1b40280ebdbd8bda7b2f", type: "radio", q: "Dewa 19 hits" }
+                ]
+            },
+            {
+                sectionTitle: "Popular artists",
+                items: [
+                    { title: "NIKI", desc: "Artist", img: "https://i.scdn.co/image/ab6761610000e5eb1d2a13cc50c265bf3f8e5612", type: "artist", q: "NIKI playlist" },
+                    { title: "Tulus", desc: "Artist", img: "https://i.scdn.co/image/ab6761610000e5ebc98099e2f4f2c002ea9a0a03", type: "artist", q: "Tulus album" },
+                    { title: "Taylor Swift", desc: "Artist", img: "https://i.scdn.co/image/ab6761610000e5eb5a00969a4698c3132a15fbb0", type: "artist", q: "Taylor Swift best hits" }
+                ]
+            }
+        ];
 
         let myPlaylist = [...originalPlaylist]; 
-        let player;
-        let currentIndex = 0;
-        let playerReady = false;
-        let isShuffle = false;
-        let repeatMode = 0; 
+        let player, currentIndex = 0, playerReady = false, isShuffle = false, repeatMode = 0; 
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
-        let savedPlaylist = JSON.parse(localStorage.getItem('savedPlaylist')) || false;
+        
+        // VARIABEL UNTUK MELACAK PLAYER MANA YANG AKTIF (YT vs Spotify)
+        let currentAppMode = 'yt'; // 'yt' atau 'spotify'
 
-        // ================= SISTEM PENCARIAN DINAMIS YOUTUBE =================
-        async function searchYouTube(query) {
-            if (!query.trim()) {
-                document.getElementById('home-title').innerText = "Pintasan cepat";
-                renderUI(); 
-                return;
-            }
-            
-            uiAction("Mencari lagu di YouTube...");
-            document.getElementById('home-title').innerText = `Hasil pencarian: ${query}`;
-            const grid = document.getElementById('grid-home');
-            grid.innerHTML = '<div style="color:var(--text-secondary); padding: 20px;">Memuat data dari server YouTube...</div>';
-            
-            // Panggil Server YouTube API v3
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(query)}&type=video&videoCategoryId=10&key=${API_KEY}`;
-            
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                
-                if (data.items && data.items.length > 0) {
-                    grid.innerHTML = '';
-                    data.items.forEach((item) => {
-                        const id = item.id.videoId;
-                        // Bersihkan teks dari kode HTML acak (kayak &quot; dsb)
-                        const title = item.snippet.title.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-                        const artist = item.snippet.channelTitle;
-                        const thumb = item.snippet.thumbnails.high.url;
-                        
-                        grid.innerHTML += `
-                            <div class="card" onclick="playSearchedSong(this)" data-id="${id}" data-title="${encodeURIComponent(title)}" data-artist="${encodeURIComponent(artist)}">
-                                <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
-                                <div class="card-overlay"><div class="card-title">${title}</div></div>
-                            </div>`;
-                    });
-                } else {
-                    grid.innerHTML = '<div style="color:var(--yt-red); padding: 20px;">Lagu tidak ditemukan atau Kuota API habis!</div>';
-                }
-            } catch (e) {
-                grid.innerHTML = '<div style="color:var(--yt-red); padding: 20px;">Gagal terhubung ke YouTube. Periksa koneksi internet!</div>';
-            }
-        }
-
-        function playSearchedSong(el) {
-            const id = el.getAttribute('data-id');
-            const title = decodeURIComponent(el.getAttribute('data-title'));
-            const artist = decodeURIComponent(el.getAttribute('data-artist'));
-            
-            // Cek apakah lagu ini udah ada di playlist aktif
-            let existingIdx = myPlaylist.findIndex(s => s.id === id);
-            
-            if (existingIdx !== -1) {
-                playSong(existingIdx);
-            } else {
-                // Tambahin ke urutan playlist paling bawah dan putar!
-                myPlaylist.push({ id, title, artist, genre: "YouTube Search" });
-                playSong(myPlaylist.length - 1);
-            }
-        }
-
-        let searchActive = false;
-        function toggleSearch() {
-            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
-            searchActive = !searchActive;
-            if (searchActive) { 
-                logo.style.display = 'none'; 
-                sb.style.display = 'block'; 
-                document.getElementById('searchInput').focus(); 
-            } else { 
-                logo.style.display = 'flex'; 
-                sb.style.display = 'none'; 
-                document.getElementById('searchInput').value = ''; 
-                document.getElementById('home-title').innerText = "Pintasan cepat";
-                renderUI(); 
-            }
-        }
-
-        // Jalankan Pencarian hanya ketika Enter ditekan! (Biar kuota awet)
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchYouTube(e.target.value);
-            }
-        });
-
-        // ================= FUNGSI NAVIGASI VIEW =================
-        function navTo(el, page) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(`view-${page}`).classList.add('active');
-        }
-
-        // ================= MODALS & POP-UPS =================
+        // ================= FUNGSI DASAR UI =================
         function uiAction(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg; t.style.display = 'block';
+            const t = document.getElementById('toast'); 
+            t.innerText = msg; 
+            t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 2500);
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        function generateFakeStats(idx) {
-            let likes = (idx * 37 % 15) + 1.2;
-            let comments = (idx * 19 % 800) + 120;
-            document.getElementById('like-val').innerText = likes.toFixed(1) + ' rb';
-            document.getElementById('comment-val').innerText = comments;
+        function navTo(el, page) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+            el.classList.add('active');
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${page}`).classList.add('active');
+            
+            // Set Tracker Aplikasi
+            if (page === 'Spotify') currentAppMode = 'spotify';
+            else if (page === 'Beranda') currentAppMode = 'yt';
         }
 
-        function checkLikeStatus(id) {
-            const btn = document.getElementById('btn-like');
-            const icon = document.getElementById('icon-like');
-            if(likedSongs.includes(id)) {
-                btn.classList.add('active-btn'); icon.classList.add('icon-filled'); icon.style.color = '#fff';
-            } else {
-                btn.classList.remove('active-btn'); icon.classList.remove('icon-filled'); icon.style.color = 'var(--text-primary)';
-            }
+        // ================= RENDER GRID YT MUSIC =================
+        function renderUI(query = '') {
+            const grid = document.getElementById('grid-home'); 
+            grid.innerHTML = '';
+            originalPlaylist.forEach((song, i) => {
+                const searchStr = (song.title + " " + song.artist).toLowerCase();
+                if (query && !searchStr.includes(query.toLowerCase())) return;
+                const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
+                grid.innerHTML += `
+                    <div class="card" onclick="playSongFromOriginal(${i}, 'yt')">
+                        <img src="${thumb}" onerror="this.src='https://via.placeholder.com/200'">
+                        <div class="card-overlay">
+                            <div class="card-title">${song.title}</div>
+                        </div>
+                    </div>`;
+            });
         }
+        renderUI();
 
-        function toggleLike() {
-            const currentId = myPlaylist[currentIndex].id;
-            const valSpan = document.getElementById('like-val');
-            let currentVal = parseFloat(valSpan.innerText.replace(' rb', ''));
-
-            if(likedSongs.includes(currentId)) {
-                likedSongs = likedSongs.filter(id => id !== currentId);
-                valSpan.innerText = (currentVal - 0.1).toFixed(1) + ' rb';
-                uiAction('Dihapus dari video yang disukai');
-            } else {
-                likedSongs.push(currentId);
-                valSpan.innerText = (currentVal + 0.1).toFixed(1) + ' rb';
-                uiAction('Ditambahkan ke video yang disukai');
-            }
-            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-            checkLikeStatus(currentId);
-        }
-
-        function btnDislike(el) {
-            el.classList.toggle('active-btn');
-            uiAction('Masukan kamu membantu menyempurnakan rekomendasi');
-        }
-
-        function tambahKomentar() {
-            const input = document.getElementById('komentar-input');
-            const list = document.getElementById('comment-list');
-            if(input.value.trim() !== '') {
-                list.innerHTML = `
-                    <div class="comment-item">
-                        <img src="https://i.pravatar.cc/100?img=3">
-                        <div><div class="comment-author">Kamu</div><div class="comment-text">${input.value}</div></div>
-                    </div>` + list.innerHTML;
-                input.value = '';
-                uiAction('Komentar ditambahkan');
-            }
-        }
-
-        function togglePlaylistSave(name, el) {
-            const icon = el.querySelector('.material-symbols-outlined');
-            if(icon.innerText === 'check_box_outline_blank') {
-                icon.innerText = 'check_box'; icon.style.color = 'var(--yt-red)';
-                uiAction(`Disimpan ke playlist ${name}`);
-            } else {
-                icon.innerText = 'check_box_outline_blank'; icon.style.color = 'var(--text-secondary)';
-                uiAction(`Dihapus dari playlist ${name}`);
-            }
-        }
-
-        // ================= RENDER BERANDA & FILTER =================
         function filterPlaylist(kategori, el) {
             document.querySelectorAll('.category-pills .pill').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
             const grid = document.getElementById('grid-home');
             grid.innerHTML = '';
             originalPlaylist.forEach((song, i) => {
-                const searchStr = (song.title + " " + song.artist + " " + (song.genre || "")).toLowerCase();
-                if(kategori === 'All' || searchStr.includes(kategori.toLowerCase())) {
+                if(song.genre === kategori || kategori === 'All') {
                     const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
                     grid.innerHTML += `
-                        <div class="card" onclick="playSongFromOriginal(${i})">
-                            <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
+                        <div class="card" onclick="playSongFromOriginal(${i}, 'yt')">
+                            <img src="${thumb}">
                             <div class="card-overlay"><div class="card-title">${song.title}</div></div>
                         </div>`;
                 }
             });
         }
 
-        function renderUI() {
-            const grid = document.getElementById('grid-home');
-            grid.innerHTML = '';
-            originalPlaylist.forEach((song, i) => {
-                const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
-                grid.innerHTML += `
-                    <div class="card" onclick="playSongFromOriginal(${i})">
-                        <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
-                        <div class="card-overlay"><div class="card-title">${song.title}</div></div>
-                    </div>`;
-            });
+        let searchActive = false;
+        function toggleSearch() {
+            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
+            searchActive = !searchActive;
+            if (searchActive) { logo.style.display = 'none'; sb.style.display = 'block'; document.getElementById('searchInput').focus(); }
+            else { logo.style.display = 'flex'; sb.style.display = 'none'; document.getElementById('searchInput').value = ''; renderUI(); }
         }
-        renderUI();
 
-        // ================= DAFTAR BERIKUTNYA =================
-        function filterQueue(filterType, el) {
-            document.querySelectorAll('.un-pill').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-            const listContainer = document.getElementById('up-next-list');
-            listContainer.innerHTML = '';
-            myPlaylist.forEach((song, i) => {
-                const searchStr = (song.title + " " + song.artist + " " + (song.genre || "")).toLowerCase();
-                if (filterType === 'All' || searchStr.includes(filterType.toLowerCase())) {
-                    const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
-                    listContainer.innerHTML += `
-                        <div class="song-list-item" onclick="playSong(${i}); closeBottomSheet();">
-                            <img src="${thumb}" onerror="this.src='https://via.placeholder.com/60'">
-                            <div class="song-list-info">
-                                <div class="song-list-title" style="${i === currentIndex ? 'color: white; font-weight: 700;' : ''}">${song.title}</div>
-                                <div class="song-list-artist">${song.artist}</div>
+        // ================= RENDER UI SPOTIFY =================
+        function renderSpotify() {
+            const container = document.getElementById('spotify-render-area');
+            let html = '';
+            dataSpotify.forEach(sec => {
+                html += `<div class="sp-section"><h2>${sec.sectionTitle}</h2><div class="sp-row">`;
+                sec.items.forEach(item => {
+                    html += `
+                        <div class="sp-card ${item.type}" onclick="searchYouTube('${item.q}')">
+                            <img src="${item.img}">
+                            <div class="sp-card-title">${item.title}</div>
+                            <div class="sp-card-desc">${item.desc}</div>
+                            <div class="sp-play-btn">
+                                <span class="material-symbols-outlined icon-filled" style="font-size: 28px;">play_arrow</span>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+        renderSpotify();
+
+        // ================= API YOUTUBE SEARCH =================
+        async function searchYouTube(query) {
+            // Dipanggil pas ngeklik tombol Spotify atau Enter di search bar
+            if (!query.trim()) return;
+            uiAction(`Loading dari Spotify Server...`);
+            
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(query)}&type=video&videoCategoryId=10&key=${API_KEY}`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.items && data.items.length > 0) {
+                    const firstId = data.items[0].id.videoId;
+                    const title = data.items[0].snippet.title.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                    const artist = data.items[0].snippet.channelTitle;
+                    
+                    let existingIdx = myPlaylist.findIndex(s => s.id === firstId);
+                    
+                    if (existingIdx !== -1) { 
+                        playSong(existingIdx, 'spotify'); 
+                    } else {
+                        myPlaylist.push({ id: firstId, title, artist, genre: "Spotify API" });
+                        playSong(myPlaylist.length - 1, 'spotify');
+                    }
+                } else { 
+                    uiAction('Gagal narik data!'); 
                 }
-            });
-        }
-
-        function renderUpNextList() {
-            filterQueue('All', document.querySelector('.un-pill.active') || document.querySelector('.un-pill'));
-            const terkaitContainer = document.getElementById('terkait-list');
-            terkaitContainer.innerHTML = '';
-            let shuffled = [...myPlaylist].sort(() => 0.5 - Math.random()).slice(0, 10);
-            shuffled.forEach((song) => {
-                const realIndex = myPlaylist.findIndex(s => s.id === song.id) > -1 ? myPlaylist.findIndex(s => s.id === song.id) : 0;
-                terkaitContainer.innerHTML += `
-                    <div class="song-list-item" onclick="playSong(${realIndex}); closeBottomSheet();">
-                        <img src="https://img.youtube.com/vi/${song.id}/hqdefault.jpg" onerror="this.src='https://via.placeholder.com/60'">
-                        <div class="song-list-info">
-                            <div class="song-list-title">${song.title}</div>
-                            <div class="song-list-artist">${song.artist}</div>
-                        </div>
-                        <span class="material-symbols-outlined" style="color: var(--text-secondary);">more_vert</span>
-                    </div>
-                `;
-            });
-        }
-
-        // ================= BOTTOM SHEET & GESTURE (HANYA UNTUK TABS) =================
-        function openTab(tabId, el) {
-            const sheet = document.getElementById('bottom-sheet');
-            if (!sheet.classList.contains('expanded')) { 
-                sheet.classList.add('expanded'); 
-            } else if(el.classList.contains('active')) { 
-                closeBottomSheet(); return; 
+            } catch (e) { 
+                uiAction('Koneksi terputus!'); 
             }
-
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(`tab-${tabId}`).classList.add('active');
         }
 
-        function closeBottomSheet() { 
-            const sheet = document.getElementById('bottom-sheet');
-            sheet.style.transform = ''; sheet.classList.remove('expanded'); 
-        }
-
-        const bottomSheet = document.getElementById('bottom-sheet');
-        const sheetHeader = document.getElementById('sheet-header');
-        let bsStartY = 0; let bsCurrentY = 0; let isBsDragging = false;
-
-        sheetHeader.addEventListener('touchstart', (e) => {
-            bsStartY = e.touches[0].clientY; isBsDragging = true; bottomSheet.style.transition = 'none';
-        }, {passive: true});
-
-        sheetHeader.addEventListener('touchmove', (e) => {
-            if (!isBsDragging) return;
-            bsCurrentY = e.touches[0].clientY;
-            let diff = bsCurrentY - bsStartY;
-            if (diff > 0 && bottomSheet.classList.contains('expanded')) {
-                bottomSheet.style.transform = `translateY(${diff}px)`;
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') { 
+                searchYouTube(e.target.value); 
+                document.getElementById('home-title').innerText = "Hasil Pencarian API"; 
+                document.getElementById('grid-home').innerHTML = '';
             }
-        }, {passive: true});
-
-        sheetHeader.addEventListener('touchend', () => {
-            if (!isBsDragging) return;
-            isBsDragging = false;
-            bottomSheet.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-            let diff = bsCurrentY - bsStartY;
-            if (diff > 80) closeBottomSheet(); else bottomSheet.style.transform = 'translateY(0)';
         });
 
-        // ================= YOUTUBE API & PLAYER LOGIC =================
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        // ================= YOUTUBE IFRAME CORE LOGIC =================
+        var tag = document.createElement('script'); 
+        tag.src = "https://www.youtube.com/iframe_api"; 
         document.head.appendChild(tag);
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
-                videoId: myPlaylist[0].id,
+                videoId: myPlaylist[0].id, 
                 playerVars: { controls: 0, rel: 0, origin: window.location.origin, playsinline: 1, disablekb: 1 },
-                events: { 'onReady': onPlayerReady, 'onStateChange': onStateChange, 'onError': onPlayerError }
+                events: { 
+                    'onReady': onPlayerReady, 
+                    'onStateChange': onStateChange, 
+                    'onError': () => { setTimeout(nextSong, 1500); } 
+                }
             });
         }
 
-        function onPlayerReady() { playerReady = true; setInterval(updateProgressBar, 500); renderUpNextList(); checkLikeStatus(myPlaylist[0].id); generateFakeStats(0);}
-        function onPlayerError() { uiAction("Video diblokir. Auto-skip..."); setTimeout(nextSong, 1500); }
-
-        function playSongFromOriginal(originalIdx) {
-            const songToPlay = originalPlaylist[originalIdx];
-            currentIndex = myPlaylist.findIndex(s => s.id === songToPlay.id);
-            if (currentIndex === -1) { myPlaylist = [...originalPlaylist]; currentIndex = originalIdx; }
-            playSong(currentIndex);
+        function onPlayerReady() { 
+            playerReady = true; 
+            setInterval(updateProgressBar, 500); 
+            renderUpNextList(); 
         }
 
-        function playSong(index) {
-            currentIndex = index;
-            if (playerReady) player.loadVideoById(myPlaylist[index].id);
-            updateMetadata(index); openPlayer();
+        function playSongFromOriginal(idx, mode) {
+            const song = originalPlaylist[idx];
+            currentIndex = myPlaylist.findIndex(s => s.id === song.id);
+            if (currentIndex === -1) { 
+                myPlaylist = [...originalPlaylist]; 
+                currentIndex = idx; 
+            }
+            playSong(currentIndex, mode);
         }
 
-        function nextSong() {
+        function playSong(idx, mode = currentAppMode) {
+            currentIndex = idx;
+            currentAppMode = mode; // Simpan mode terakhir lagu diputar darimana
+            
+            if (playerReady) player.loadVideoById(myPlaylist[idx].id);
+            updateMetadata(idx); 
+            openPlayer();
+        }
+
+        function nextSong() { 
             if (isShuffle) {
                 let randomIdx = currentIndex;
-                while (randomIdx === currentIndex && myPlaylist.length > 1) { randomIdx = Math.floor(Math.random() * myPlaylist.length); }
+                while (randomIdx === currentIndex && myPlaylist.length > 1) { 
+                    randomIdx = Math.floor(Math.random() * myPlaylist.length); 
+                }
                 currentIndex = randomIdx;
-            } else { currentIndex = (currentIndex + 1) % myPlaylist.length; }
-            playSong(currentIndex);
+            } else { 
+                currentIndex = (currentIndex + 1) % myPlaylist.length; 
+            }
+            playSong(currentIndex); 
         }
 
-        function prevSong() { currentIndex = (currentIndex - 1 + myPlaylist.length) % myPlaylist.length; playSong(currentIndex); }
-        function togglePlay() { if(!playerReady) return; player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo(); }
+        function prevSong() { 
+            currentIndex = (currentIndex - 1 + myPlaylist.length) % myPlaylist.length; 
+            playSong(currentIndex); 
+        }
+
+        function togglePlay() { 
+            if(!playerReady) return; 
+            player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo(); 
+        }
 
         function toggleShuffle() {
             isShuffle = !isShuffle;
-            const btn = document.getElementById('btn-shuffle');
+            const btnYT = document.getElementById('ytm-btn-shuffle');
+            const btnSP = document.getElementById('sp-btn-shuffle');
+            
             if(isShuffle) {
-                btn.style.color = 'white';
+                btnYT.style.color = 'white'; btnSP.style.color = 'var(--sp-green)';
                 let currentSong = myPlaylist[currentIndex];
                 let remainingSongs = myPlaylist.filter((_, i) => i !== currentIndex);
                 remainingSongs.sort(() => 0.5 - Math.random());
                 myPlaylist = [currentSong, ...remainingSongs];
-                currentIndex = 0; uiAction('Acak diaktifkan, antrean diubah');
+                currentIndex = 0; 
+                uiAction('Acak diaktifkan');
             } else {
-                btn.style.color = 'var(--text-secondary)';
+                btnYT.style.color = 'var(--text-secondary)'; btnSP.style.color = '#b3b3b3';
                 let currentId = myPlaylist[currentIndex].id;
                 myPlaylist = [...originalPlaylist];
                 currentIndex = myPlaylist.findIndex(s => s.id === currentId);
@@ -881,67 +909,215 @@
 
         function toggleRepeat() {
             repeatMode = (repeatMode + 1) % 3;
-            const btn = document.getElementById('btn-repeat');
-            if (repeatMode === 0) { btn.innerText = 'repeat'; btn.style.color = 'var(--text-secondary)'; uiAction('Ulang antrean dinonaktifkan'); }
-            else if (repeatMode === 1) { btn.innerText = 'repeat'; btn.style.color = 'white'; uiAction('Ulangi seluruh antrean'); }
-            else if (repeatMode === 2) { btn.innerText = 'repeat_one'; btn.style.color = 'white'; uiAction('Ulangi lagu saat ini'); }
+            const btnYT = document.getElementById('ytm-btn-repeat');
+            const btnSP = document.getElementById('sp-btn-repeat');
+            
+            if (repeatMode === 0) { 
+                btnYT.innerText = 'repeat'; btnYT.style.color = 'var(--text-secondary)'; 
+                btnSP.innerText = 'repeat'; btnSP.style.color = '#b3b3b3';
+            } else if (repeatMode === 1) { 
+                btnYT.innerText = 'repeat'; btnYT.style.color = 'white'; 
+                btnSP.innerText = 'repeat'; btnSP.style.color = 'var(--sp-green)';
+            } else if (repeatMode === 2) { 
+                btnYT.innerText = 'repeat_one'; btnYT.style.color = 'white'; 
+                btnSP.innerText = 'repeat_one'; btnSP.style.color = 'var(--sp-green)';
+            }
         }
 
-        function toggleMode(el) {
-            document.querySelectorAll('.fp-toggle-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active'); uiAction('Beralih ke mode ' + el.innerText);
-        }
-
+        // ================= SYNC UI KE KEDUA PLAYER =================
         function onStateChange(e) {
-            const fpIcon = document.getElementById('fp-play-btn'); const mIcon = document.getElementById('m-play-btn');
-            if(e.data === YT.PlayerState.PLAYING) { fpIcon.innerText = 'pause'; mIcon.innerText = 'pause'; } 
-            else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.UNSTARTED) { fpIcon.innerText = 'play_arrow'; mIcon.innerText = 'play_arrow'; } 
-            else if(e.data === YT.PlayerState.ENDED) {
+            const ytmPlayBtn = document.getElementById('ytm-play-btn');
+            const spPlayBtn = document.getElementById('sp-play-btn');
+            const mPlayBtn = document.getElementById('m-play-btn');
+            
+            if(e.data === 1) { 
+                ytmPlayBtn.innerText = 'pause'; 
+                spPlayBtn.innerText = 'pause'; 
+                mPlayBtn.innerText = 'pause'; 
+            } else if (e.data === 2 || e.data === -1) { 
+                ytmPlayBtn.innerText = 'play_arrow'; 
+                spPlayBtn.innerText = 'play_arrow'; 
+                mPlayBtn.innerText = 'play_arrow'; 
+            } else if(e.data === 0) { 
                 if (repeatMode === 2) { player.seekTo(0); player.playVideo(); }
-                else if (repeatMode === 1 || currentIndex < myPlaylist.length - 1) { nextSong(); }
+                else { nextSong(); }
             }
         }
 
         function updateMetadata(idx) {
-            const song = myPlaylist[idx];
+            const song = myPlaylist[idx]; 
             const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
+            const hqThumb = `https://img.youtube.com/vi/${song.id}/maxresdefault.jpg`;
             
-            document.getElementById('m-title').innerText = song.title; document.getElementById('m-artist').innerText = song.artist;
-            document.getElementById('m-thumb').src = thumb; document.getElementById('mini-player').classList.remove('hidden');
+            // Update Mini Player
+            document.getElementById('m-title').innerText = song.title; 
+            document.getElementById('m-artist').innerText = song.artist;
+            document.getElementById('m-thumb').src = thumb; 
+            document.getElementById('mini-player').classList.remove('hidden');
             
-            document.getElementById('fp-title').innerText = song.title; document.getElementById('fp-artist').innerText = song.artist;
+            // Update Player YT Music
+            document.getElementById('ytm-title').innerText = song.title; 
+            document.getElementById('ytm-artist').innerText = song.artist;
             
-            const lyricsContainer = document.getElementById('lyrics-content');
-            lyricsContainer.innerHTML = `<span style="color: var(--text-secondary); font-size: 16px;">Lirik belum tersedia dari Musixmatch.</span>`;
+            // Update Player Spotify
+            document.getElementById('sp-title').innerText = song.title; 
+            document.getElementById('sp-artist').innerText = song.artist;
+            document.getElementById('sp-art').src = hqThumb; // Pake cover High-Res
             
-            checkLikeStatus(song.id); generateFakeStats(idx); renderUpNextList();
-        }
-
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const m = Math.floor(seconds / 60); const s = Math.floor(seconds % 60);
-            return `${m}:${s < 10 ? '0' : ''}${s}`;
+            // Generate Fake Stats Like & Comment
+            let likes = (idx * 37 % 15) + 1.2;
+            document.getElementById('like-val').innerText = likes.toFixed(1) + ' rb';
+            
+            checkLikeStatus(song.id);
+            renderUpNextList();
         }
 
         function updateProgressBar() {
             if(!playerReady || !player.getCurrentTime) return;
-            const cur = player.getCurrentTime(); const dur = player.getDuration();
+            const cur = player.getCurrentTime(); 
+            const dur = player.getDuration();
+            
             if(dur > 0) {
-                document.getElementById('p-fill').style.width = ((cur / dur) * 100) + '%';
-                document.getElementById('t-current').innerText = formatTime(cur);
-                document.getElementById('t-total').innerText = formatTime(dur);
+                const perc = ((cur / dur) * 100) + '%';
+                const curStr = `${Math.floor(cur/60)}:${Math.floor(cur%60).toString().padStart(2,'0')}`;
+                const durStr = `${Math.floor(dur/60)}:${Math.floor(dur%60).toString().padStart(2,'0')}`;
+                
+                // Sinkron ke YT Player
+                document.getElementById('ytm-p-fill').style.width = perc;
+                document.getElementById('ytm-t-current').innerText = curStr;
+                document.getElementById('ytm-t-total').innerText = durStr;
+                
+                // Sinkron ke Spotify Player
+                document.getElementById('sp-p-fill').style.width = perc;
+                document.getElementById('sp-t-current').innerText = curStr;
+                document.getElementById('sp-t-total').innerText = durStr;
             }
         }
 
-        function seek(e) {
-            if(!playerReady) return;
-            const rect = document.getElementById('p-container').getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            player.seekTo(pos * player.getDuration());
+        function seek(e, target) { 
+            let r;
+            if(target === 'ytm') r = document.getElementById('ytm-p-container').getBoundingClientRect();
+            else r = document.getElementById('sp-p-container').getBoundingClientRect();
+            
+            player.seekTo(((e.clientX - r.left)/r.width) * player.getDuration()); 
         }
 
-        function openPlayer() { document.getElementById('full-player').classList.add('active'); }
-        function closePlayer() { document.getElementById('full-player').classList.remove('active'); closeBottomSheet(); }
+        // ================= LOGIKA BUKA TUTUP PLAYER (YT vs SPOTIFY) =================
+        function openPlayer() {
+            if (currentAppMode === 'yt') {
+                document.getElementById('ytm-full-player').classList.add('active');
+            } else if (currentAppMode === 'spotify') {
+                document.getElementById('spotify-full-player').classList.add('active');
+            }
+        }
+
+        function closePlayer() { 
+            document.getElementById('ytm-full-player').classList.remove('active'); 
+            document.getElementById('spotify-full-player').classList.remove('active'); 
+            closeBottomSheet(); 
+        }
+
+        // Fitur Like Spotify Sync
+        function checkLikeStatus(id) {
+            const btnYT = document.getElementById('btn-like');
+            const iconYT = document.getElementById('icon-like');
+            const iconSP = document.getElementById('sp-btn-like');
+            
+            if(likedSongs.includes(id)) {
+                btnYT.classList.add('active-btn'); iconYT.classList.add('icon-filled'); iconYT.style.color = '#fff';
+                iconSP.style.color = 'var(--sp-green)';
+            } else {
+                btnYT.classList.remove('active-btn'); iconYT.classList.remove('icon-filled'); iconYT.style.color = 'var(--text-primary)';
+                iconSP.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        function toggleLike() {
+            const currentId = myPlaylist[currentIndex].id;
+            if(likedSongs.includes(currentId)) {
+                likedSongs = likedSongs.filter(id => id !== currentId);
+                uiAction('Dihapus dari video yang disukai');
+            } else {
+                likedSongs.push(currentId);
+                uiAction('Ditambahkan ke video yang disukai');
+            }
+            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+            checkLikeStatus(currentId);
+        }
+
+        function tambahKomentar() {
+            const input = document.getElementById('komentar-input');
+            if(input.value.trim() !== '') {
+                document.getElementById('comment-list').innerHTML = `
+                    <div class="comment-item">
+                        <img src="https://i.pravatar.cc/100?img=3">
+                        <div><div class="comment-author">Kamu</div><div class="comment-text">${input.value}</div></div>
+                    </div>` + document.getElementById('comment-list').innerHTML;
+                input.value = '';
+                uiAction('Komentar ditambahkan');
+            }
+        }
+
+        // ================= BOTTOM SHEET & GESTURE (KHUSUS YT PLAYER) =================
+        function renderUpNextList() {
+            const list = document.getElementById('up-next-list'); 
+            list.innerHTML = '';
+            
+            myPlaylist.forEach((s, i) => {
+                list.innerHTML += `
+                    <div class="song-list-item" onclick="playSong(${i}); closeBottomSheet();">
+                        <img src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg">
+                        <div class="song-list-info">
+                            <div class="song-list-title" style="${i === currentIndex ? 'color:white;font-weight:700;' : ''}">${s.title}</div>
+                            <div class="song-list-artist">${s.artist}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function openTab(id, el) {
+            const sheet = document.getElementById('bottom-sheet');
+            if (!sheet.classList.contains('expanded')) { sheet.classList.add('expanded'); } 
+            else if(el.classList.contains('active')) { closeBottomSheet(); return; }
+
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); 
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            el.classList.add('active'); 
+            document.getElementById(`tab-${id}`).classList.add('active');
+        }
+
+        function closeBottomSheet() { 
+            const s = document.getElementById('bottom-sheet'); 
+            s.style.transform = ''; 
+            s.classList.remove('expanded'); 
+        }
+
+        // Swipe Action
+        const bs = document.getElementById('bottom-sheet');
+        const sh = document.getElementById('sheet-header');
+        let sy = 0, cy = 0, drag = false;
+
+        sh.addEventListener('touchstart', e => { 
+            sy = e.touches[0].clientY; 
+            drag = true; 
+            bs.style.transition = 'none'; 
+        }, {passive:true});
+
+        sh.addEventListener('touchmove', e => { 
+            if(!drag) return; 
+            cy = e.touches[0].clientY; 
+            let d = cy - sy; 
+            if(d > 0 && bs.classList.contains('expanded')) bs.style.transform = `translateY(${d}px)`; 
+        }, {passive:true});
+
+        sh.addEventListener('touchend', () => { 
+            if(!drag) return; 
+            drag = false; 
+            bs.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'; 
+            if(cy - sy > 80) closeBottomSheet(); 
+            else bs.style.transform = 'translateY(0)'; 
+        });
+
     </script>
 </body>
 </html>
