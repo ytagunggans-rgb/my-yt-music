@@ -186,7 +186,7 @@
                 <span>Music</span>
             </div>
             <div class="search-container" id="search-box">
-                <input type="text" id="searchInput" placeholder="Telusuri lagu dari playlist...">
+                <input type="text" id="searchInput" placeholder="Cari lagu di YouTube... lalu tekan Enter">
             </div>
             <div class="header-icons">
                 <span class="material-symbols-outlined" onclick="uiAction('Mencari perangkat TV...')">cast</span>
@@ -205,7 +205,7 @@
         <div class="section-title">
             <div class="section-info">
                 <div class="section-subtitle">PUTIH BIRU</div>
-                <h2>Pintasan cepat</h2>
+                <h2 id="home-title">Pintasan cepat</h2>
             </div>
             <span class="material-symbols-outlined" style="font-size: 28px;">chevron_right</span>
         </div>
@@ -331,8 +331,8 @@
                     <div class="un-filters">
                         <div class="un-pill active" onclick="filterQueue('All', this)">All</div>
                         <div class="un-pill" onclick="filterQueue('Populer', this)">Populer</div>
-                        <div class="un-pill" onclick="filterQueue('Koplo', this)">Koplo</div>
-                        <div class="un-pill" onclick="filterQueue('Senang', this)">Senang</div>
+                        <div class="un-pill" onclick="filterQueue('Cita Citata', this)">Cita Citata</div>
+                        <div class="un-pill" onclick="filterQueue('Juicy Luicy', this)">Juicy Luicy</div>
                     </div>
                     <div id="up-next-list"></div>
                 </div>
@@ -417,79 +417,82 @@
     </div>
 
     <script>
+        // API KEY GOOGLE LO (Rahasia!)
+        const API_KEY = "AIzaSyB4Zg7GLOj_xlIgZ-V-s3G5cCq7CBj7EH4";
+
         const originalPlaylist = [
-            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.52" },
-            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main! ft. Josua Natanael (Official Music Video)", artist: "antinrml 5.07" },
-            { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU (Official Music Video)", artist: "antinrml 3.48" },
-            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla  &  Yung Caters 3.14 centyl" },
-            { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza 2.38 SUPER EKSIS" },
-            { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO  &  Tenxi 2.30 LoudeR (Sped Up)" },
-            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN.flv", artist: "Starky Aji 5.14" },
-            { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay ,  Ciloqciliq  &  Zynakal 3.10 Ngga Dulu" },
-            { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi  &  RYO 2.43 1/10" },
-            { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi ,  Jemsii  &  Naufal Syachreza 3.52" },
-            { id: "M0gHZvLTJyI", title: "MALU MALU", artist: "dia  &  INDAHKUS 3.26 MALU MALU" },
-            { id: "bGAmJJKEaQE", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.10 Calon Mantu Idaman" },
-            { id: "r4puA1XHgx0", title: "cuma satu", artist: "Suisei ,  Tenxi  &  Kirohta 2.40" },
-            { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla 2.36 SO ASU" },
-            { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi, RYO, dia, dan Jemsii 3.26 Puting Beliung" },
-            { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu (Orchestra Version)", artist: "Nadhif Basalamah  &  Andi Rianto 4.38 BSS & KITST (Orchestra Version)" },
-            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah 4.10 Selamat Ulang Tahun" },
-            { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah 3.59 Untuk Dunia, Cinta, dan Kotornya" },
-            { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU BOY MALU MALU DIA ELART REMIX VIRAL TIKTOK TERBARU 2026 !!", artist: "Maikaldo Sihotang 6.16" },
-            { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata 3.21 Bahagia Itu Sederhana" },
-            { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata 3.11 Pura Pura Bahagia" },
-            { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata 3.27 Meriang" },
-            { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO 2.24 Gak Karuan" },
-            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO 2.24 LoudeR" },
-            { id: "heukr71gj9I", title: "main-main!", artist: "RYO  &  Josua Natanael 2.09 main-main!" },
-            { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi ,  suisei  &  Jemsii 3.17 mejikuhibiniu" },
-            { id: "En-EHqRk8yg", title: "Garam & Madu (Sakit Dadaku)", artist: "Tenxi 3.05 Garam & Madu (Sakit Dadaku)" },
-            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi  &  Jemsii 4.07 Puting Beliung" },
-            { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi  &  Jemsii 3.22 Puting Beliung" },
-            { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk ,  Banditoz Yaow 86  &  BoyCord 3.44 Kicau Mania" },
-            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian  &  Adrian Khalif 3.30 Alamak" },
-            { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia  &  Tenxi 2.34 INI DIA" },
-            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel 2.57 Masa Lalu" },
-            { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah 4.39 Sorai" },
-            { id: "Z1FyY4sM7ok", title: "Kasih Aba Aba", artist: "Naykilla ,  Tenxi  &  Jemsii 2.57 Kasih Aba Aba" },
-            { id: "CCw8K2Sskkk", title: "Semua Aku Dirayakan", artist: "Nadin Amizah 5.11 Semua Aku Dirayakan" },
-            { id: "6bwJ6Wjt-VQ", title: "Bintang 5", artist: "Tenxi  &  Jemsii 4.19" },
-            { id: "K-OYnG7j9Ys", title: "JAMET", artist: "dia 2.22 JAMET" },
-            { id: "BM5OiWNtWNQ", title: "Kasih Tau Mama (Malam Minggu)", artist: "Rombongan Bodonk Koplo 3.27 Kasih Tau Mama (Malam Minggu)" },
-            { id: "bHwhI85mQ9M", title: "attached", artist: "Tenxi ,  Anangga  &  Suisei 2.52" },
-            { id: "qnbwUiSudIk", title: "Berubah", artist: "Tenxi  &  Jemsii 3.21" },
-            { id: "st3Oo1Zf7x0", title: "Goyang Dumang", artist: "Cita Citata 3.47 Goyang Dumang" },
-            { id: "lQ3ktPaXwWY", title: "Orang Baru Lebe Gacor", artist: "Ecko Show ,  Juan Reza  &  Chesylino 3.37 Orang Baru Lebe Gacor" },
-            { id: "O9aBf7J00Zc", title: "Jangan Buru-Buru (Berdua)", artist: "RYO 2.39 LoudeR" },
-            { id: "TjJuxZQlPH0", title: "Aku Mah Apa Atuh", artist: "Cita Citata 3.36 Aku Mah Apa Atuh" },
-            { id: "Xh93FL06JwQ", title: "Bertaut", artist: "Nadin Amizah 5.16 Selamat Ulang Tahun" },
-            { id: "Qb8vgvtEuEs", title: "Lihat Kebunku (Taman Bunga)", artist: "Aku Jeje 3.10 Lihat Kebunku (Taman Bunga)" },
-            { id: "R7mX714_QZs", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah 4.40 Nadhif (laman berikutnya)" },
-            { id: "zhawF9_lpM0", title: "Runtuh (feat. Fiersa Besari)", artist: "Feby Putri 3.44 Runtuh" },
-            { id: "gB8n3ZIWcUk", title: "EEEE A", artist: "dia 1.59 INI DIA" },
-            { id: "MODbh7nKWmQ", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf 3.51 Sedia Aku Sebelum Hujan" },
-            { id: "xnALK28rQ1w", title: "Bunga Maaf", artist: "The Lantis 4.13 Bunga Maaf" },
-            { id: "60gOh6eCrkw", title: "Terbuang Dalam Waktu", artist: "Barasuara 4.40 Terbuang Dalam Waktu" },
-            { id: "SVzHmRZZNrE", title: "Lantas", artist: "Juicy Luicy 3.55 Lantas" },
-            { id: "QJkJILUQ0mM", title: "Ayam Den Lapeh   LAGU MINANG RIA", artist: "Lagu Sunda dan Minangkabau 3.46" },
-            { id: "1Sbp-0WwYpA", title: "Keong Racun Fersi BaLI", artist: "benvoer 2.08" },
-            { id: "_IxACCqUhK0", title: "DJ CALON MANTU IDAMAN BREAKFUNK YANG LAGI VIRAL TIKTOK", artist: "Sarip Remix 3.07" },
-            { id: "LLZS82p8drk", title: "No Comment", artist: "Tuty Wibowo  &  Bunda Corla 2.52" },
-            { id: "peo7ICI4ABk", title: "Kacamata (Live) (feat. Juicy Luicy)", artist: "Afgan 3.16" },
-            { id: "IwzkfMmNMpM", title: "Dreamers (FIFA World Cup 2022 Soundtrack)", artist: "Jung Kook  &  BTS 4.16" },
-            { id: "3HSYwQFosjQ", title: "Selalu Ada di Nadimu", artist: "Prince Poetiray  &  Quinn Salman 2.55" },
-            { id: "YSIS560SMGE", title: "Kasih Putih", artist: "Yovie Widianto  &  Glenn Fredly 3.57 Kembali" },
-            { id: "X9EDqDWza3M", title: "Sialan", artist: "Juicy Luicy  &  Adrian Khalif 4.02 Nonfiksi" },
-            { id: "oojgR4tkQCQ", title: "Lampu Kuning", artist: "Juicy Luicy 4.00 Nonfiksi" },
-            { id: "DqJN5Pg3As4", title: "Tampar", artist: "Juicy Luicy 3.23 Nonfiksi" },
-            { id: "y77uJgd0Wdg", title: "Tak Di Tanganku", artist: "Mawar De Jongh  &  Juicy Luicy 3.53" },
-            { id: "4y8l22UYkOk", title: "Bukan Orangnya", artist: "Juicy Luicy 3.11 Nonfiksi" },
-            { id: "Ki4suUlzDWw", title: "Tanpa Tergesa", artist: "Juicy Luicy 3.39 Tanpa Tergesa" },
-            { id: "RH-azQEq3es", title: "Asing", artist: "Juicy Luicy 3.14 Nonfiksi" },
-            { id: "9TuWiwkBGis", title: "Terlalu Tinggi", artist: "Juicy Luicy 4.39 Terlalu Tinggi" },
-            { id: "0wDZIAJQ_yY", title: "Mawar Jingga", artist: "Juicy Luicy 3.32 Mawar Jingga" },
-            { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy 3.14 Nonfiksi" }
+            { id: "9KnngSa6vk4", title: "Calon Mantu Idaman (feat. Ncum)", artist: "Rombongan Bodonk Koplo 3.52", genre: "Koplo" },
+            { id: "IrdruPzbWLM", title: "RYO - Cuma Temen + main-main!", artist: "antinrml", genre: "Senang" },
+            { id: "LMIS2PMqCL0", title: "dia & INDAHKUS - MALU MALU", artist: "antinrml", genre: "Pop" },
+            { id: "ivZOeCbKPFM", title: "Geleng Geleng", artist: "Naykilla & Yung Caters", genre: "Senang" },
+            { id: "RJ-um7r3R8o", title: "SUPER EKSIS", artist: "Naufal Syachreza", genre: "Pop" },
+            { id: "4STthLskCbk", title: "1/10 (Sped Up)", artist: "RYO & Tenxi", genre: "Bersantai" },
+            { id: "VKP1t3gQ_o0", title: "SINTA AND JOJO KEONG RACUN", artist: "Starky Aji", genre: "Populer" },
+            { id: "BLm3kDMBXDE", title: "Ngga Dulu", artist: "Akbar Chalay", genre: "Senang" },
+            { id: "XYYCE2K7_uk", title: "1/10 (feat. RYO)", artist: "Tenxi & RYO", genre: "Bersantai" },
+            { id: "13ectUo5Cu8", title: "hoRRReg", artist: "Tenxi & Jemsii", genre: "Koplo" },
+            { id: "M0gHZvLTJyI", title: "MALU MALU", artist: "dia & INDAHKUS", genre: "Pop" },
+            { id: "bGAmJJKEaQE", title: "Calon Mantu Idaman", artist: "Rombongan Bodonk Koplo", genre: "Koplo" },
+            { id: "r4puA1XHgx0", title: "cuma satu", artist: "Suisei & Tenxi", genre: "Bersantai" },
+            { id: "7iEDBAo3qfI", title: "SO ASU", artist: "Naykilla", genre: "Pop" },
+            { id: "ji478AMQES8", title: "Paling Sabi", artist: "Tenxi & RYO", genre: "Senang" },
+            { id: "4txB-O3Z27g", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah", genre: "Bersantai" },
+            { id: "xQlS1a99vwk", title: "Taruh", artist: "Nadin Amizah", genre: "Pop" },
+            { id: "9bZaxxlrzbI", title: "Di Akhir Perang", artist: "Nadin Amizah", genre: "Bersantai" },
+            { id: "-PKITZleqXE", title: "DJ BOY JANGAN MALU MALU", artist: "Maikaldo Sihotang", genre: "Koplo" },
+            { id: "zkBjx_4OwmQ", title: "Bahagia Itu Sederhana", artist: "Cita Citata", genre: "Koplo" },
+            { id: "SQQWEbu88QQ", title: "Pura Pura Bahagia", artist: "Cita Citata", genre: "Koplo" },
+            { id: "vnZuvtWUVrE", title: "Meriang", artist: "Cita Citata", genre: "Koplo" },
+            { id: "JWoJwmx04dY", title: "Gak Karuan", artist: "RYO", genre: "Senang" },
+            { id: "xoUQ8wNWwq4", title: "Cuma Temen", artist: "RYO", genre: "Pop" },
+            { id: "heukr71gj9I", title: "main-main!", artist: "RYO & Josua", genre: "Pop" },
+            { id: "aIWpGeXMfrI", title: "mejikuhibiniu", artist: "Tenxi & suisei", genre: "Bersantai" },
+            { id: "En-EHqRk8yg", title: "Garam & Madu", artist: "Tenxi", genre: "Bersantai" },
+            { id: "VwprPxp5QdE", title: "Bintang 5", artist: "Tenxi & Jemsii", genre: "Pop" },
+            { id: "V6Cfw1WMHI0", title: "Berubah", artist: "Tenxi", genre: "Senang" },
+            { id: "1sckyCTMhN0", title: "Kicau Mania", artist: "Ndarboy Genk", genre: "Koplo" },
+            { id: "5B-VDNc6PAo", title: "Alamak", artist: "Rizky Febian", genre: "Pop" },
+            { id: "6H6Gz2AKgI0", title: "SENCY", artist: "dia & Tenxi", genre: "Senang" },
+            { id: "sTSGgtpHRvo", title: "Masa Lalu (Slowed Down)", artist: "Chaeroel", genre: "Bersantai" },
+            { id: "9QtRcfQ0kyY", title: "Sorai", artist: "Nadin Amizah", genre: "Bersantai" },
+            { id: "Z1FyY4sM7ok", title: "Kasih Aba Aba", artist: "Naykilla & Tenxi", genre: "Senang" },
+            { id: "CCw8K2Sskkk", title: "Semua Aku Dirayakan", artist: "Nadin Amizah", genre: "Pop" },
+            { id: "6bwJ6Wjt-VQ", title: "Bintang 5", artist: "Tenxi & Jemsii", genre: "Pop" },
+            { id: "K-OYnG7j9Ys", title: "JAMET", artist: "dia", genre: "Senang" },
+            { id: "BM5OiWNtWNQ", title: "Kasih Tau Mama", artist: "Rombongan Bodonk", genre: "Koplo" },
+            { id: "bHwhI85mQ9M", title: "attached", artist: "Tenxi", genre: "Bersantai" },
+            { id: "qnbwUiSudIk", title: "Berubah", artist: "Tenxi", genre: "Pop" },
+            { id: "st3Oo1Zf7x0", title: "Goyang Dumang", artist: "Cita Citata", genre: "Koplo" },
+            { id: "lQ3ktPaXwWY", title: "Orang Baru Lebe Gacor", artist: "Ecko Show", genre: "Pop" },
+            { id: "O9aBf7J00Zc", title: "Jangan Buru-Buru", artist: "RYO", genre: "Bersantai" },
+            { id: "TjJuxZQlPH0", title: "Aku Mah Apa Atuh", artist: "Cita Citata", genre: "Koplo" },
+            { id: "Xh93FL06JwQ", title: "Bertaut", artist: "Nadin Amizah", genre: "Bersantai" },
+            { id: "Qb8vgvtEuEs", title: "Lihat Kebunku", artist: "Aku Jeje", genre: "Pop" },
+            { id: "R7mX714_QZs", title: "kota ini tak sama tanpamu", artist: "Nadhif Basalamah", genre: "Bersantai" },
+            { id: "zhawF9_lpM0", title: "Runtuh", artist: "Feby Putri", genre: "Bersantai" },
+            { id: "gB8n3ZIWcUk", title: "EEEE A", artist: "dia", genre: "Senang" },
+            { id: "MODbh7nKWmQ", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf", genre: "Pop" },
+            { id: "xnALK28rQ1w", title: "Bunga Maaf", artist: "The Lantis", genre: "Pop" },
+            { id: "60gOh6eCrkw", title: "Terbuang Dalam Waktu", artist: "Barasuara", genre: "Pop" },
+            { id: "SVzHmRZZNrE", title: "Lantas", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "QJkJILUQ0mM", title: "Ayam Den Lapeh", artist: "Lagu Minang", genre: "Pop" },
+            { id: "1Sbp-0WwYpA", title: "Keong Racun Fersi BaLI", artist: "benvoer", genre: "Koplo" },
+            { id: "_IxACCqUhK0", title: "DJ CALON MANTU IDAMAN", artist: "Sarip Remix", genre: "Koplo" },
+            { id: "LLZS82p8drk", title: "No Comment", artist: "Tuty Wibowo", genre: "Koplo" },
+            { id: "peo7ICI4ABk", title: "Kacamata (Live)", artist: "Afgan", genre: "Pop" },
+            { id: "IwzkfMmNMpM", title: "Dreamers", artist: "Jung Kook", genre: "Pop" },
+            { id: "3HSYwQFosjQ", title: "Selalu Ada di Nadimu", artist: "Prince Poetiray", genre: "Pop" },
+            { id: "YSIS560SMGE", title: "Kasih Putih", artist: "Yovie Widianto", genre: "Bersantai" },
+            { id: "X9EDqDWza3M", title: "Sialan", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "oojgR4tkQCQ", title: "Lampu Kuning", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "DqJN5Pg3As4", title: "Tampar", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "y77uJgd0Wdg", title: "Tak Di Tanganku", artist: "Mawar De Jongh", genre: "Pop" },
+            { id: "4y8l22UYkOk", title: "Bukan Orangnya", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "Ki4suUlzDWw", title: "Tanpa Tergesa", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "RH-azQEq3es", title: "Asing", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "9TuWiwkBGis", title: "Terlalu Tinggi", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "0wDZIAJQ_yY", title: "Mawar Jingga", artist: "Juicy Luicy", genre: "Populer" },
+            { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy", genre: "Populer" }
         ]; 
 
         let myPlaylist = [...originalPlaylist]; 
@@ -500,6 +503,90 @@
         let repeatMode = 0; 
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
         let savedPlaylist = JSON.parse(localStorage.getItem('savedPlaylist')) || false;
+
+        // ================= SISTEM PENCARIAN DINAMIS YOUTUBE =================
+        async function searchYouTube(query) {
+            if (!query.trim()) {
+                document.getElementById('home-title').innerText = "Pintasan cepat";
+                renderUI(); 
+                return;
+            }
+            
+            uiAction("Mencari lagu di YouTube...");
+            document.getElementById('home-title').innerText = `Hasil pencarian: ${query}`;
+            const grid = document.getElementById('grid-home');
+            grid.innerHTML = '<div style="color:var(--text-secondary); padding: 20px;">Memuat data dari server YouTube...</div>';
+            
+            // Panggil Server YouTube API v3
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(query)}&type=video&videoCategoryId=10&key=${API_KEY}`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.items && data.items.length > 0) {
+                    grid.innerHTML = '';
+                    data.items.forEach((item) => {
+                        const id = item.id.videoId;
+                        // Bersihkan teks dari kode HTML acak (kayak &quot; dsb)
+                        const title = item.snippet.title.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                        const artist = item.snippet.channelTitle;
+                        const thumb = item.snippet.thumbnails.high.url;
+                        
+                        grid.innerHTML += `
+                            <div class="card" onclick="playSearchedSong(this)" data-id="${id}" data-title="${encodeURIComponent(title)}" data-artist="${encodeURIComponent(artist)}">
+                                <img src="${thumb}" alt="Cover" onerror="this.src='https://via.placeholder.com/200'">
+                                <div class="card-overlay"><div class="card-title">${title}</div></div>
+                            </div>`;
+                    });
+                } else {
+                    grid.innerHTML = '<div style="color:var(--yt-red); padding: 20px;">Lagu tidak ditemukan atau Kuota API habis!</div>';
+                }
+            } catch (e) {
+                grid.innerHTML = '<div style="color:var(--yt-red); padding: 20px;">Gagal terhubung ke YouTube. Periksa koneksi internet!</div>';
+            }
+        }
+
+        function playSearchedSong(el) {
+            const id = el.getAttribute('data-id');
+            const title = decodeURIComponent(el.getAttribute('data-title'));
+            const artist = decodeURIComponent(el.getAttribute('data-artist'));
+            
+            // Cek apakah lagu ini udah ada di playlist aktif
+            let existingIdx = myPlaylist.findIndex(s => s.id === id);
+            
+            if (existingIdx !== -1) {
+                playSong(existingIdx);
+            } else {
+                // Tambahin ke urutan playlist paling bawah dan putar!
+                myPlaylist.push({ id, title, artist, genre: "YouTube Search" });
+                playSong(myPlaylist.length - 1);
+            }
+        }
+
+        let searchActive = false;
+        function toggleSearch() {
+            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
+            searchActive = !searchActive;
+            if (searchActive) { 
+                logo.style.display = 'none'; 
+                sb.style.display = 'block'; 
+                document.getElementById('searchInput').focus(); 
+            } else { 
+                logo.style.display = 'flex'; 
+                sb.style.display = 'none'; 
+                document.getElementById('searchInput').value = ''; 
+                document.getElementById('home-title').innerText = "Pintasan cepat";
+                renderUI(); 
+            }
+        }
+
+        // Jalankan Pencarian hanya ketika Enter ditekan! (Biar kuota awet)
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchYouTube(e.target.value);
+            }
+        });
 
         // ================= FUNGSI NAVIGASI VIEW =================
         function navTo(el, page) {
@@ -519,7 +606,6 @@
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Tombol Like Dinamis
         function generateFakeStats(idx) {
             let likes = (idx * 37 % 15) + 1.2;
             let comments = (idx * 19 % 800) + 120;
@@ -604,12 +690,10 @@
             });
         }
 
-        function renderUI(query = '') {
+        function renderUI() {
             const grid = document.getElementById('grid-home');
             grid.innerHTML = '';
             originalPlaylist.forEach((song, i) => {
-                const searchStr = (song.title + " " + song.artist).toLowerCase();
-                if (query && !searchStr.includes(query.toLowerCase())) return;
                 const thumb = `https://img.youtube.com/vi/${song.id}/hqdefault.jpg`;
                 grid.innerHTML += `
                     <div class="card" onclick="playSongFromOriginal(${i})">
@@ -619,15 +703,6 @@
             });
         }
         renderUI();
-
-        let searchActive = false;
-        function toggleSearch() {
-            const sb = document.getElementById('search-box'); const logo = document.getElementById('main-logo');
-            searchActive = !searchActive;
-            if (searchActive) { logo.style.display = 'none'; sb.style.display = 'block'; document.getElementById('searchInput').focus(); }
-            else { logo.style.display = 'flex'; sb.style.display = 'none'; document.getElementById('searchInput').value = ''; renderUI(); }
-        }
-        document.getElementById('searchInput').addEventListener('input', (e) => renderUI(e.target.value));
 
         // ================= DAFTAR BERIKUTNYA =================
         function filterQueue(filterType, el) {
@@ -656,7 +731,7 @@
             filterQueue('All', document.querySelector('.un-pill.active') || document.querySelector('.un-pill'));
             const terkaitContainer = document.getElementById('terkait-list');
             terkaitContainer.innerHTML = '';
-            let shuffled = [...originalPlaylist].sort(() => 0.5 - Math.random()).slice(0, 10);
+            let shuffled = [...myPlaylist].sort(() => 0.5 - Math.random()).slice(0, 10);
             shuffled.forEach((song) => {
                 const realIndex = myPlaylist.findIndex(s => s.id === song.id) > -1 ? myPlaylist.findIndex(s => s.id === song.id) : 0;
                 terkaitContainer.innerHTML += `
