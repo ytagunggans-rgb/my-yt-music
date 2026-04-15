@@ -233,12 +233,22 @@
 
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; z-index: 9999; display: none; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
 
-        /* RESPONSIVE */
+        /* RESPONSIVE MOBILE FIX */
         @media (max-width: 768px) {
             .sp-sidebar { display: none; }
-            .sp-main { margin: 0; border-radius: 0; }
-            .sp-album-header { flex-direction: column; align-items: center; text-align: center; }
+            .sp-main { margin: 0; border-radius: 0; padding-bottom: 80px; }
+            .sp-topbar { flex-wrap: wrap; padding: 10px; gap: 10px; }
+            .sp-search-bar { order: 3; width: 100%; max-width: 100%; margin: 0; }
+            .sp-album-header { flex-direction: column; text-align: center; padding: 20px; height: auto; }
             .sp-album-info { align-items: center; }
+            .sp-album-cover { width: 160px; height: 160px; margin-bottom: 10px; }
+            .sp-album-title { font-size: 28px; }
+            .sp-tracklist-header { display: none; } /* Sembunyiin judul tabel biar hemat ruang di HP */
+            .sp-track-row { grid-template-columns: 30px 1fr 40px; padding: 10px 5px; margin: 0; }
+            .sp-track-title { font-size: 14px; }
+            .sp-track-artist { font-size: 12px; }
+            .sp-card { min-width: 140px; max-width: 150px; padding: 10px; }
+            .sp-row { gap: 10px; }
         }
     </style>
 </head>
@@ -438,7 +448,9 @@
             <span class="material-symbols-outlined">play_circle</span>Sampel
         </div>
         <div class="nav-item" onclick="navTo(this, 'Spotify')">
-            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_White.png" style="width: 24px; filter: invert(53%) sepia(82%) saturate(399%) hue-rotate(85deg) brightness(97%) contrast(88%);">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#1DB954">
+                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.24 1.02h.06zm1.44-3.3c-.301.42-.84.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.24 1.2v.06zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.38 4.26-1.32 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.54-1.02.72-1.56.3z"/>
+            </svg>
             Spotify
         </div>
         <div class="nav-item" onclick="navTo(this, 'Koleksi')">
@@ -756,15 +768,13 @@
             { id: "SiBq_vCmIGI", title: "HAHAHA", artist: "Juicy Luicy", genre: "Populer" }
         ];
 
-        // ================= ILMU HITAM: DATA SPOTIFY BESERTA TRACKLIST ALBUM =================
-        // ================= DATA SPOTIFY ZONE (GAMBAR UDAH DI-FIX) =================
+       // ================= ILMU HITAM: DATA SPOTIFY ZONE (GAMBAR FIXED) =================
         const dataSpotify = [
             {
                 sectionTitle: "Popular radio",
                 items: [
                     { 
-                        title: "Nadhif", desc: "Album • Nadhif Basalamah • 2024", 
-                        img: "https://img.youtube.com/vi/qUbbD_O1Pqk/hqdefault.jpg", type: "radio",
+                        title: "Nadhif", desc: "Album • Nadhif Basalamah • 2024", img: "https://img.youtube.com/vi/qUbbD_O1Pqk/hqdefault.jpg", type: "radio",
                         bg: "linear-gradient(180deg, #274b5c 0%, var(--sp-bg) 40%)", 
                         tracks: [
                             { title: "tulis / terapi", artist: "Nadhif Basalamah", dur: "3:51", q: "Nadhif Basalamah tulis terapi" },
@@ -776,8 +786,7 @@
                         ]
                     },
                     { 
-                        title: "Hindia", desc: "With .Feast, Nadin Amizah...", 
-                        img: "https://img.youtube.com/vi/eLhwQ2i-GzI/hqdefault.jpg", type: "radio",
+                        title: "Hindia", desc: "With .Feast, Nadin Amizah...", img: "https://img.youtube.com/vi/eLhwQ2i-GzI/hqdefault.jpg", type: "radio",
                         bg: "linear-gradient(180deg, #5b87ad 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Evaluasi", artist: "Hindia", dur: "3:20", q: "Hindia Evaluasi" },
@@ -787,8 +796,7 @@
                         ]
                     },
                     { 
-                        title: "Bruno Mars", desc: "With Ed Sheeran, Katy Perry...", 
-                        img: "https://img.youtube.com/vi/e-fA-gBCkj0/hqdefault.jpg", type: "radio",
+                        title: "Bruno Mars", desc: "With Ed Sheeran, Katy Perry...", img: "https://img.youtube.com/vi/e-fA-gBCkj0/hqdefault.jpg", type: "radio",
                         bg: "linear-gradient(180deg, #6c8a5f 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Locked out of Heaven", artist: "Bruno Mars", dur: "3:53", q: "Bruno mars locked out of heaven" },
@@ -797,8 +805,7 @@
                         ]
                     },
                     { 
-                        title: "Sheila On 7", desc: "With Tulus, Pamungkas...", 
-                        img: "https://img.youtube.com/vi/wJgE40H4sL0/hqdefault.jpg", type: "radio",
+                        title: "Sheila On 7", desc: "With Tulus, Pamungkas...", img: "https://img.youtube.com/vi/wJgE40H4sL0/hqdefault.jpg", type: "radio",
                         bg: "linear-gradient(180deg, #d38b5d 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Dan...", artist: "Sheila On 7", dur: "4:10", q: "Sheila On 7 Dan" },
@@ -807,8 +814,7 @@
                         ]
                     },
                     { 
-                        title: "Dewa 19", desc: "With Dewa, Pamungkas...", 
-                        img: "https://img.youtube.com/vi/1_M_PjA-oH0/hqdefault.jpg", type: "radio",
+                        title: "Dewa 19", desc: "With Dewa, Pamungkas...", img: "https://img.youtube.com/vi/1_M_PjA-oH0/hqdefault.jpg", type: "radio",
                         bg: "linear-gradient(180deg, #4b4b4b 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Pupus", artist: "Dewa 19", dur: "5:05", q: "Dewa 19 Pupus" },
@@ -821,8 +827,7 @@
                 sectionTitle: "Popular artists",
                 items: [
                     { 
-                        title: "NIKI", desc: "Artist", 
-                        img: "https://img.youtube.com/vi/F-XwJbK-Huk/hqdefault.jpg", type: "artist",
+                        title: "NIKI", desc: "Artist", img: "https://img.youtube.com/vi/F-XwJbK-Huk/hqdefault.jpg", type: "artist",
                         bg: "linear-gradient(180deg, #4a3e3d 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Every Summertime", artist: "NIKI", dur: "3:35", q: "NIKI Every Summertime" },
@@ -830,12 +835,19 @@
                         ]
                     },
                     { 
-                        title: "Tulus", desc: "Artist", 
-                        img: "https://img.youtube.com/vi/CxgGz4Gz6a8/hqdefault.jpg", type: "artist",
+                        title: "Tulus", desc: "Artist", img: "https://img.youtube.com/vi/CxgGz4Gz6a8/hqdefault.jpg", type: "artist",
                         bg: "linear-gradient(180deg, #3d3d3d 0%, var(--sp-bg) 40%)",
                         tracks: [
                             { title: "Hati-Hati di Jalan", artist: "Tulus", dur: "4:02", q: "Tulus Hati hati di jalan" },
                             { title: "Monokrom", artist: "Tulus", dur: "3:34", q: "Tulus Monokrom" }
+                        ]
+                    },
+                    { 
+                        title: "Taylor Swift", desc: "Artist", img: "https://img.youtube.com/vi/5j1RCys4R0g/hqdefault.jpg", type: "artist",
+                        bg: "linear-gradient(180deg, #383838 0%, var(--sp-bg) 40%)",
+                        tracks: [
+                            { title: "Cruel Summer", artist: "Taylor Swift", dur: "2:58", q: "Taylor Swift Cruel Summer" },
+                            { title: "Anti-Hero", artist: "Taylor Swift", dur: "3:20", q: "Taylor Swift Anti Hero" }
                         ]
                     }
                 ]
